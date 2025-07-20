@@ -11,28 +11,37 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 2. **設定ファイル構造の理解**: karabiner.jsonの構造を分析し、TypeScript型定義を作成
 3. **サンプルファイルの収集**: 実際の設定ファイルをテストデータとして使用
 
+## 実装状況
+
+### 完了済み機能
+- **TypeScript型定義**: `src/types/karabiner.ts` - Karabiner設定の完全な型定義
+- **Zodスキーマ**: `src/types/karabiner-schema.ts` - バリデーション用スキーマ
+- **ファイルアップロード**: `src/components/FileUpload.tsx` - ドラッグ&ドロップ対応
+- **状態管理**: `src/store/karabiner.ts` - Zustandによる設定管理
+- **基本UI**: ファイルアップロード、エクスポート機能実装済み
+
 ## 機能追加計画
 
 ### フェーズ1: コア機能（優先度：高）
 
-#### 1. Karabiner設定ファイルの型定義とスキーマ作成
-- [ ] karabiner.jsonの基本構造の型定義
-- [ ] プロファイル（profiles）の型定義
-- [ ] simple_modificationsの型定義
-- [ ] complex_modificationsの型定義
-- [ ] Zodスキーマによるバリデーション実装
+#### 1. Karabiner設定ファイルの型定義とスキーマ作成 ✅
+- [x] karabiner.jsonの基本構造の型定義
+- [x] プロファイル（profiles）の型定義
+- [x] simple_modificationsの型定義
+- [x] complex_modificationsの型定義
+- [x] Zodスキーマによるバリデーション実装
 
-#### 2. ファイルアップロード機能
-- [ ] react-dropzoneコンポーネントの実装
-- [ ] ドラッグ&ドロップエリアのUI
-- [ ] ファイル選択ボタン
-- [ ] アップロードされたファイルの基本検証
+#### 2. ファイルアップロード機能 ✅
+- [x] react-dropzoneコンポーネントの実装
+- [x] ドラッグ&ドロップエリアのUI
+- [x] ファイル選択ボタン
+- [x] アップロードされたファイルの基本検証
 
-#### 3. 設定ファイルのパーサーとバリデーション
-- [ ] JSONパースエラーのハンドリング
-- [ ] Karabiner設定構造の検証
-- [ ] エラーメッセージの表示
-- [ ] 有効な設定の状態管理（Zustand）
+#### 3. 設定ファイルのパーサーとバリデーション ✅
+- [x] JSONパースエラーのハンドリング
+- [x] Karabiner設定構造の検証
+- [x] エラーメッセージの表示
+- [x] 有効な設定の状態管理（Zustand）
 
 ### フェーズ2: 基本的な編集機能（優先度：中）
 
