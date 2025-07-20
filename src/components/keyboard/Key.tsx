@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils'
 import type { KeyData } from '@/data/keyboardLayouts'
+import { cn } from '@/lib/utils'
 
 interface KeyProps {
   keyData: KeyData
@@ -12,7 +12,16 @@ interface KeyProps {
   disabled?: boolean
 }
 
-export function Key({ keyData, isSelected, isMapped, mappedTo, onClick, onMouseEnter, onMouseLeave, disabled }: KeyProps) {
+export function Key({
+  keyData,
+  isSelected,
+  isMapped,
+  mappedTo,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  disabled
+}: KeyProps) {
   const { keyCode, label, shiftLabel, width = 1, height = 1 } = keyData
 
   // Calculate size based on standard key unit (1u = 60px)

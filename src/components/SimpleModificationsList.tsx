@@ -1,8 +1,8 @@
 import { ArrowRight, Edit2, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import type { SimpleModification } from '@/types/karabiner'
 import { useKarabinerStore } from '../store/karabiner'
 import { KeyMappingEditor } from './KeyMappingEditor'
-import type { SimpleModification } from '@/types/karabiner'
 
 export function SimpleModificationsList() {
   const { config, selectedProfileIndex, deleteSimpleModification } = useKarabinerStore()
@@ -64,7 +64,7 @@ export function SimpleModificationsList() {
           </div>
         </div>
       ))}
-      
+
       {/* Key Mapping Editor Modal */}
       <KeyMappingEditor
         isOpen={isEditorOpen}

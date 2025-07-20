@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { cn } from '@/lib/utils'
-import { Key } from './Key'
 import type { LayoutType } from '@/data/keyboardLayouts'
 import { getLayout } from '@/data/keyboardLayouts'
+import { cn } from '@/lib/utils'
 import type { SimpleModification } from '@/types/karabiner'
+import { Key } from './Key'
 
 interface VisualKeyboardProps {
   layout?: LayoutType
@@ -55,10 +55,7 @@ export function VisualKeyboard({
 
   return (
     <div
-      className={cn(
-        'relative bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-inner',
-        className
-      )}
+      className={cn('relative bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-inner', className)}
       style={{
         width: `${keyboardWidth + 32}px`, // +32 for padding
         minHeight: `${keyboardHeight + 32}px`
@@ -84,11 +81,12 @@ export function VisualKeyboard({
               }}
             >
               {row.keys.map((keyData, keyIndex) => {
-                const keyX = keyData.x !== undefined 
-                  ? keyData.x * 60 
-                  : row.keys
-                      .slice(0, keyIndex)
-                      .reduce((acc, k) => acc + (k.width || 1) * 60 + 4, 0) // 4px gap
+                const keyX =
+                  keyData.x !== undefined
+                    ? keyData.x * 60
+                    : row.keys
+                        .slice(0, keyIndex)
+                        .reduce((acc, k) => acc + (k.width || 1) * 60 + 4, 0) // 4px gap
 
                 const isFromKey = selectedFromKey === keyData.keyCode
                 const isToKey = selectedToKey === keyData.keyCode
@@ -121,7 +119,7 @@ export function VisualKeyboard({
                       onMouseLeave={() => setHoveredKey(null)}
                       disabled={mode === 'view' && !onKeyClick}
                     />
-                    
+
                     {/* Tooltip */}
                     {hoveredKey === keyData.keyCode && mode === 'view' && (
                       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap z-10">

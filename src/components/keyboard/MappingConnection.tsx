@@ -5,10 +5,7 @@ interface MappingConnectionProps {
   toPosition: { x: number; y: number }
 }
 
-export function MappingConnection({
-  fromPosition,
-  toPosition
-}: MappingConnectionProps) {
+export function MappingConnection({ fromPosition, toPosition }: MappingConnectionProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -29,23 +26,19 @@ export function MappingConnection({
     // Draw curved line
     ctx.beginPath()
     ctx.moveTo(fromPosition.x, fromPosition.y)
-    
+
     const controlX1 = fromPosition.x + (toPosition.x - fromPosition.x) * 0.3
     const controlY1 = fromPosition.y - 50
     const controlX2 = toPosition.x - (toPosition.x - fromPosition.x) * 0.3
     const controlY2 = toPosition.y - 50
-    
-    ctx.bezierCurveTo(
-      controlX1, controlY1,
-      controlX2, controlY2,
-      toPosition.x, toPosition.y
-    )
+
+    ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, toPosition.x, toPosition.y)
     ctx.stroke()
 
     // Draw arrow
     const angle = Math.atan2(toPosition.y - controlY2, toPosition.x - controlX2)
     const arrowLength = 10
-    
+
     ctx.beginPath()
     ctx.moveTo(toPosition.x, toPosition.y)
     ctx.lineTo(
@@ -58,7 +51,6 @@ export function MappingConnection({
       toPosition.y - arrowLength * Math.sin(angle + Math.PI / 6)
     )
     ctx.stroke()
-
   }, [fromPosition, toPosition])
 
   return (

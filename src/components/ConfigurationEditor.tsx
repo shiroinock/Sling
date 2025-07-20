@@ -5,6 +5,7 @@ import type { LayoutType } from '@/data/keyboardLayouts'
 import type { SimpleModification } from '@/types/karabiner'
 import { cn } from '../lib/utils'
 import { useKarabinerStore } from '../store/karabiner'
+import { ComplexModificationEditor } from './ComplexModificationEditor'
 import { ComplexModificationsList } from './ComplexModificationsList'
 import { KeyMappingEditor } from './KeyMappingEditor'
 import { VisualKeyboard } from './keyboard/VisualKeyboard'
@@ -13,9 +14,10 @@ import { ProfileTabs } from './ProfileTabs'
 type TabType = 'simple' | 'complex' | 'function_keys' | 'devices'
 
 export function ConfigurationEditor() {
-  const { config, reset, selectedProfileIndex } = useKarabinerStore()
+  const { config, reset, selectedProfileIndex, selectedRuleIndex, selectRule } = useKarabinerStore()
   const [activeTab, setActiveTab] = useState<TabType>('simple')
   const [isEditorOpen, setIsEditorOpen] = useState(false)
+  const [isComplexEditorOpen, setIsComplexEditorOpen] = useState(false)
   const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>('us-ansi')
   const [editingModification, setEditingModification] = useState<SimpleModification | null>(null)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
@@ -32,7 +34,7 @@ export function ConfigurationEditor() {
   const handleKeyClick = (keyCode: string) => {
     const simpleModifications = config.profiles[selectedProfileIndex].simple_modifications || []
     const existingModIndex = simpleModifications.findIndex(mod => mod.from.key_code === keyCode)
-    
+
     if (existingModIndex !== -1) {
       // Edit existing mapping
       setEditingModification(simpleModifications[existingModIndex])
@@ -46,7 +48,7 @@ export function ConfigurationEditor() {
       setEditingModification(newModification)
       setEditingIndex(null)
     }
-    
+
     setIsEditorOpen(true)
   }
 
@@ -54,6 +56,11 @@ export function ConfigurationEditor() {
     setIsEditorOpen(false)
     setEditingModification(null)
     setEditingIndex(null)
+  }
+
+  const handleEditComplexRule = (index: number) => {
+    selectRule(index)
+    setIsComplexEditorOpen(true)
   }
 
   const tabs: { id: TabType; label: string }[] = [
@@ -125,7 +132,7 @@ export function ConfigurationEditor() {
                   <div className="flex items-center gap-4">
                     <select
                       value={keyboardLayout}
-                      onChange={(e) => setKeyboardLayout(e.target.value as LayoutType)}
+                      onChange={e => setKeyboardLayout(e.target.value as LayoutType)}
                       className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     >
                       <option value="us-ansi">US ANSI</option>
@@ -143,18 +150,20 @@ export function ConfigurationEditor() {
                     </button>
                   </div>
                 </div>
-                
+
                 {/* Visual Keyboard Display */}
                 <div className="space-y-4">
                   <div className="flex justify-center">
                     <VisualKeyboard
                       layout={keyboardLayout}
-                      simpleModifications={config.profiles[selectedProfileIndex].simple_modifications || []}
+                      simpleModifications={
+                        config.profiles[selectedProfileIndex].simple_modifications || []
+                      }
                       mode="view"
                       onKeyClick={handleKeyClick}
                     />
                   </div>
-                  
+
                   {/* Legend or Empty State Message */}
                   {(config.profiles[selectedProfileIndex].simple_modifications?.length ?? 0) > 0 ? (
                     <div className="flex justify-center">
@@ -171,7 +180,8 @@ export function ConfigurationEditor() {
                     </div>
                   ) : (
                     <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-                      No key mappings configured. Click "Add Modification" to create your first mapping.
+                      No key mappings configured. Click "Add Modification" to create your first
+                      mapping.
                     </div>
                   )}
                 </div>
@@ -186,13 +196,14 @@ export function ConfigurationEditor() {
                   </h3>
                   <button
                     type="button"
+                    onClick={() => setIsComplexEditorOpen(true)}
                     className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     Add Rule
                   </button>
                 </div>
-                <ComplexModificationsList />
+                <ComplexModificationsList onEditRule={handleEditComplexRule} />
               </div>
             )}
 
@@ -210,13 +221,20 @@ export function ConfigurationEditor() {
           </div>
         </div>
       </div>
-      
+
       {/* Key Mapping Editor Modal */}
       <KeyMappingEditor
         isOpen={isEditorOpen}
         onClose={handleEditorClose}
         editingModification={editingModification}
         editingIndex={editingIndex}
+      />
+
+      {/* Complex Modification Editor Modal */}
+      <ComplexModificationEditor
+        isOpen={isComplexEditorOpen}
+        onClose={() => setIsComplexEditorOpen(false)}
+        ruleIndex={selectedRuleIndex ?? undefined}
       />
     </div>
   )

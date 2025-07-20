@@ -74,9 +74,9 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 - [x] キークリックでの編集開始
 - [x] from/toキーの視覚的選択
 - [x] マッピングの削除機能（モーダル内）
-- [ ] complex_modifications編集フォーム
-- [ ] 条件（conditions）の編集
-- [ ] バリデーションとプレビュー
+- [x] complex_modifications編集フォーム
+- [x] 条件（conditions）の編集
+- [x] バリデーションとプレビュー
 
 #### 6. キーコード選択UI ✅
 - [x] ビジュアルキーボードコンポーネント
@@ -167,13 +167,13 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 
 ## 次のステップ
 
-フェーズ2の主要な編集機能が完成しました。次の実装予定：
+フェーズ2の主要な編集機能が完成しました。Complex Modifications編集UIも実装済みです。次の実装予定：
 
-1. **Complex Modifications編集** - ルールの作成・編集UI
-2. **モディファイアキーの組み合わせ** - Ctrl+Shift+Aなどの複合キー対応
-3. **プロファイル管理の拡張** - 作成、複製、削除機能
-4. **特殊キーサポート** - メディアキー、ファンクションキーの完全対応
-5. **検索・フィルタリング機能** - マッピングの検索UI
+1. **モディファイアキーの組み合わせ** - Ctrl+Shift+Aなどの複合キー対応（Complex Modificationsで部分対応済み）
+2. **プロファイル管理の拡張** - 作成、複製、削除機能
+3. **特殊キーサポート** - メディアキー、ファンクションキーの完全対応
+4. **検索・フィルタリング機能** - マッピングの検索UI
+5. **ルールのグループ化と有効/無効切り替え** - より高度な管理機能
 
 ## 実装済み技術スタック
 
@@ -184,3 +184,14 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 - **コード品質**: Biome (linter + formatter)
 - **ファイル操作**: react-dropzone, file-saver
 - **アイコン**: lucide-react
+
+## 最近の更新内容
+
+### 2025年7月 - Complex Modifications編集機能の実装
+- Complex Modificationsルールの作成・編集・削除機能を実装
+- Manipulator、From/Toイベント、Conditionsの包括的な編集UI
+- タブによる整理されたインターフェース
+- ダークモード対応のUI改善
+  - 背景色とテキストカラーのコントラスト改善
+  - Input、Select、Button、Badge等のUIコンポーネントの色調整
+  - ライトモード・ダークモード両方での視認性向上

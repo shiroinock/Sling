@@ -34,11 +34,20 @@ npm run build
 # ビルド結果のプレビュー
 npm run preview
 
-# コードリント
+# コードリント（チェックのみ）
 npm run lint
+
+# コードリント（自動修正付き）
+npm run lint:fix
 
 # コードフォーマット
 npm run format
+
+# 総合チェック（リント＋フォーマット）
+npm run check
+
+# 総合チェック（自動修正付き）
+npm run check:fix
 
 # TypeScriptの型チェック
 npx tsc --noEmit
@@ -136,22 +145,32 @@ sling/
   - US ANSI、JIS、MacBook US/JISレイアウト対応
   - キークリックでマッピング編集開始
   - マッピング済みキーの視覚的表示（マップ先のキーラベル表示）
-- **キーマッピング編集**
+- **Simple Modifications編集**
   - Simple Modificationsの追加・編集・削除
   - モーダルでの直感的な編集UI
   - ビジュアルキーボードからのキー選択
+- **Complex Modifications編集** ✨ NEW
+  - Complex Modificationsルールの作成・編集・削除
+  - Manipulatorの追加・編集・削除
+  - From/Toイベントの詳細設定
+  - 条件（Conditions）の設定UI
+  - タブによる整理されたインターフェース
 - **状態管理**
   - Zustandによる設定管理（ローカルストレージ永続化付き）
   - プロファイル切り替え機能
   - リアルタイムでの変更反映
+- **UIコンポーネント**
+  - shadcn/ui準拠のコンポーネント群
+  - Dialog、Tabs、Select、Badge、Button、Input、Label
+  - ダークモード対応の色設定（適切なコントラスト）
 
 ### 実装予定
-- Complex Modificationsの編集UI
-- モディファイアキーの組み合わせ対応
+- モディファイアキーの組み合わせ対応（Complex Modificationsで部分対応済み）
 - プロファイルの作成・複製・削除
 - 特殊キー（メディアキー、ファンクションキー）の完全対応
 - マッピングの検索・フィルタリング機能
 - インポート/エクスポート履歴
+- ルールのグループ化と有効/無効切り替え
 
 ## 今後の開発ノート
 
@@ -160,3 +179,28 @@ sling/
 - コンポーネントの実装詳細
 - テストとリントの設定
 - パフォーマンス最適化の方法
+
+## UI/UXガイドライン
+
+### カラースキーム
+プロジェクト全体で統一されたカラースキームを使用しています：
+
+#### テキストカラー
+- **見出し・ラベル**: `text-gray-700 dark:text-gray-200`
+- **本文**: `text-gray-900 dark:text-gray-100`
+- **補助テキスト**: `text-gray-600 dark:text-gray-400`
+- **プレースホルダー**: `placeholder:text-gray-400 dark:placeholder:text-gray-500`
+
+#### 背景色
+- **プライマリ背景**: `bg-white dark:bg-gray-900`
+- **セカンダリ背景**: `bg-gray-50 dark:bg-gray-800`
+- **ホバー背景**: `hover:bg-gray-50 dark:hover:bg-gray-700`
+
+#### ボーダー
+- **通常**: `border-gray-200 dark:border-gray-700`
+- **入力フィールド**: `border-gray-300 dark:border-gray-600`
+
+#### アクセントカラー
+- **プライマリ**: `blue-600` (ボタン、リンク、フォーカス)
+- **成功**: `green-500` (マッピング済みキー)
+- **エラー**: `red-500` (削除ボタン)

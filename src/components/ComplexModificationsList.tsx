@@ -1,8 +1,12 @@
-import { ChevronRight, ToggleLeft, Trash2 } from 'lucide-react'
+import { Edit, ToggleLeft, Trash2 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useKarabinerStore } from '../store/karabiner'
 
-export function ComplexModificationsList() {
+interface ComplexModificationsListProps {
+  onEditRule?: (index: number) => void
+}
+
+export function ComplexModificationsList({ onEditRule }: ComplexModificationsListProps) {
   const { config, selectedProfileIndex, selectedRuleIndex, selectRule, deleteRule } =
     useKarabinerStore()
 
@@ -45,7 +49,17 @@ export function ComplexModificationsList() {
               </p>
             </div>
             <div className="flex items-center space-x-2">
-              <ChevronRight className="w-5 h-5 text-gray-400" />
+              <button
+                type="button"
+                onClick={e => {
+                  e.stopPropagation()
+                  onEditRule?.(index)
+                }}
+                className="p-2 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                aria-label="Edit rule"
+              >
+                <Edit className="w-4 h-4" />
+              </button>
               <button
                 type="button"
                 onClick={e => {

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
-import { X, ArrowRight, Keyboard, Trash2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { VisualKeyboard } from './keyboard/VisualKeyboard'
-import type { SimpleModification } from '@/types/karabiner'
+import { ArrowRight, Keyboard, Trash2, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import type { LayoutType } from '@/data/keyboardLayouts'
+import { cn } from '@/lib/utils'
 import { useKarabinerStore } from '@/store/karabiner'
+import type { SimpleModification } from '@/types/karabiner'
+import { VisualKeyboard } from './keyboard/VisualKeyboard'
 
 interface KeyMappingEditorProps {
   isOpen: boolean
@@ -19,8 +19,9 @@ export function KeyMappingEditor({
   editingModification,
   editingIndex
 }: KeyMappingEditorProps) {
-  const { addSimpleModification, updateSimpleModification, deleteSimpleModification } = useKarabinerStore()
-  
+  const { addSimpleModification, updateSimpleModification, deleteSimpleModification } =
+    useKarabinerStore()
+
   const [fromKey, setFromKey] = useState<string>('')
   const [toKey, setToKey] = useState<string>('')
   const [layout, setLayout] = useState<LayoutType>('us-ansi')
@@ -65,7 +66,6 @@ export function KeyMappingEditor({
     }
   }
 
-
   const handleToKeySelect = (keyCode: string) => {
     setToKey(keyCode)
   }
@@ -92,13 +92,16 @@ export function KeyMappingEditor({
         <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-200px)]">
           {/* Layout selector */}
           <div className="flex items-center gap-4">
-            <label htmlFor="keyboard-layout" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="keyboard-layout"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Keyboard Layout:
             </label>
             <select
               id="keyboard-layout"
               value={layout}
-              onChange={(e) => setLayout(e.target.value as LayoutType)}
+              onChange={e => setLayout(e.target.value as LayoutType)}
               className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             >
               <option value="us-ansi">US ANSI</option>
