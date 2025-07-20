@@ -1,12 +1,13 @@
 import { z } from 'zod'
-import { COMMON_KEY_CODES, MODIFIER_KEYS, CONSUMER_KEY_CODES, POINTING_BUTTONS } from './karabiner'
 
-const GlobalConfigurationSchema = z.object({
-  check_for_updates_on_startup: z.boolean().optional(),
-  show_in_menu_bar: z.boolean().optional(),
-  show_profile_name_in_menu_bar: z.boolean().optional(),
-  unsafe_ui: z.boolean().optional()
-}).optional()
+const GlobalConfigurationSchema = z
+  .object({
+    check_for_updates_on_startup: z.boolean().optional(),
+    show_in_menu_bar: z.boolean().optional(),
+    show_profile_name_in_menu_bar: z.boolean().optional(),
+    unsafe_ui: z.boolean().optional()
+  })
+  .optional()
 
 const MouseMotionToScrollSchema = z.object({
   speed: z.number().optional()
@@ -62,24 +63,32 @@ const MouseKeySchema = z.object({
   speed_multiplier: z.number().optional()
 })
 
-const StickyModifierSchema = z.record(z.enum(['on', 'off', 'toggle']))
+const StickyModifierSchema = z.record(z.string(), z.enum(['on', 'off', 'toggle']))
 
 const SoftwareFunctionSchema = z.object({
-  iokit_power_management: z.object({
-    system_sleep: z.boolean().optional()
-  }).optional(),
-  set_mouse_cursor_position: z.object({
-    x: z.number(),
-    y: z.number(),
-    screen: z.number().optional()
-  }).optional(),
-  cg_event_double_click: z.object({
-    button: z.number().optional()
-  }).optional(),
-  open_application: z.object({
-    bundle_identifier: z.string().optional(),
-    file_path: z.string().optional()
-  }).optional()
+  iokit_power_management: z
+    .object({
+      system_sleep: z.boolean().optional()
+    })
+    .optional(),
+  set_mouse_cursor_position: z
+    .object({
+      x: z.number(),
+      y: z.number(),
+      screen: z.number().optional()
+    })
+    .optional(),
+  cg_event_double_click: z
+    .object({
+      button: z.number().optional()
+    })
+    .optional(),
+  open_application: z
+    .object({
+      bundle_identifier: z.string().optional(),
+      file_path: z.string().optional()
+    })
+    .optional()
 })
 
 const ToKeyCodeSchema = z.object({

@@ -4,7 +4,7 @@
 
 ## プロジェクト概要
 
-SlingはKarabiner-Elements用のキーマッピングWeb GUIです。このプロジェクトは現在、初期セットアップ段階にあります。
+SlingはKarabiner-Elements用のキーマッピングWeb GUIです。VIA/Remap風のビジュアルキーボードインターフェースで、直感的にキーマッピングを編集できます。
 
 ## 開発セットアップ
 
@@ -14,9 +14,10 @@ SlingはKarabiner-Elements用のキーマッピングWeb GUIです。このプ�
 - **ビルドツール**: Vite
 - **フレームワーク**: React + TypeScript
 - **スタイリング**: Tailwind CSS + shadcn/ui
-- **状態管理**: Zustand
+- **状態管理**: Zustand（ローカルストレージ永続化付き）
 - **ファイル操作**: react-dropzone, file-saver
 - **バリデーション**: Zod
+- **コード品質**: Biome（リンター + フォーマッター）
 - **アイコン**: lucide-react
 
 ### 開発コマンド
@@ -32,6 +33,15 @@ npm run build
 
 # ビルド結果のプレビュー
 npm run preview
+
+# コードリント
+npm run lint
+
+# コードフォーマット
+npm run format
+
+# TypeScriptの型チェック
+npx tsc --noEmit
 ```
 
 ### Karabiner-Elements統合
@@ -71,28 +81,82 @@ dist/  # または build/, out/
 ```
 sling/
 ├── src/
-│   ├── components/      # UIコンポーネント
-│   │   └── ui/         # shadcn/uiコンポーネント
-│   ├── lib/            # ユーティリティ関数
-│   │   └── utils.ts    # クラスユーティリティ
-│   ├── store/          # Zustand状態管理
-│   ├── types/          # TypeScript型定義
-│   ├── App.tsx         # メインアプリケーション
-│   ├── main.tsx        # エントリーポイント
-│   └── index.css       # Tailwind CSS
-├── public/             # 静的アセット
-├── index.html          # HTMLテンプレート
-├── package.json        # 依存関係とスクリプト
-├── tsconfig.json       # TypeScript設定
-├── vite.config.ts      # Vite設定
-├── tailwind.config.js  # Tailwind CSS設定
-└── postcss.config.js   # PostCSS設定
+│   ├── components/         # UIコンポーネント
+│   │   ├── FileUpload.tsx         # ファイルアップロードコンポーネント
+│   │   ├── ConfigurationEditor.tsx # メイン編集UI
+│   │   ├── ProfileTabs.tsx        # プロファイル切り替えタブ
+│   │   ├── KeyMappingEditor.tsx   # キーマッピング編集モーダル
+│   │   ├── ComplexModificationsList.tsx # 複雑な修飾キー一覧
+│   │   ├── keyboard/              # キーボード関連コンポーネント
+│   │   │   ├── VisualKeyboard.tsx # ビジュアルキーボード
+│   │   │   └── Key.tsx            # 個別キーコンポーネント
+│   │   └── ui/                    # shadcn/uiコンポーネント
+│   ├── data/              # 静的データ
+│   │   └── keyboardLayouts.ts     # キーボードレイアウト定義
+│   ├── lib/               # ユーティリティ関数
+│   │   └── utils.ts       # クラスユーティリティ
+│   ├── store/             # Zustand状態管理
+│   │   └── karabiner.ts   # Karabiner設定ストア
+│   ├── types/             # TypeScript型定義
+│   │   ├── karabiner.ts   # Karabiner設定の型定義
+│   │   └── karabiner-schema.ts # スキーマ定義
+│   ├── App.tsx            # メインアプリケーション
+│   ├── main.tsx           # エントリーポイント
+│   └── index.css          # Tailwind CSS
+├── docs/                  # ドキュメント
+│   ├── DEVELOPMENT_PLAN.md      # 開発計画
+│   └── KARABINER_INTEGRATION.md # Karabiner統合ガイド
+├── public/                # 静的アセット
+├── biome.json             # Biome設定
+├── index.html             # HTMLテンプレート
+├── package.json           # 依存関係とスクリプト
+├── tsconfig.json          # TypeScript設定
+├── tsconfig.node.json     # Node.js用TypeScript設定
+├── vite.config.ts         # Vite設定
+├── vite-env.d.ts          # Vite型定義
+├── tailwind.config.js     # Tailwind CSS設定
+├── postcss.config.js      # PostCSS設定
+├── README.md              # プロジェクトREADME
+├── CLAUDE.md              # Claude Code用ガイド
+└── LICENSE                # ライセンスファイル
 ```
+
+## 現在の実装状況
+
+### 完了済み
+- **Karabiner設定の型定義** (`src/types/karabiner.ts`)
+  - 完全なKarabiner設定構造の型定義
+  - よく使用されるキーコード、修飾キー、コンシューマキーの定数定義
+- **ファイル操作**
+  - ドラッグ&ドロップでの設定ファイル読み込み
+  - JSON形式での設定ファイルエクスポート
+  - Zodスキーマによるバリデーション
+- **ビジュアルキーボードUI**
+  - VIA/Remap風のビジュアルキーボード表示
+  - US ANSI、JIS、MacBook US/JISレイアウト対応
+  - キークリックでマッピング編集開始
+  - マッピング済みキーの視覚的表示（マップ先のキーラベル表示）
+- **キーマッピング編集**
+  - Simple Modificationsの追加・編集・削除
+  - モーダルでの直感的な編集UI
+  - ビジュアルキーボードからのキー選択
+- **状態管理**
+  - Zustandによる設定管理（ローカルストレージ永続化付き）
+  - プロファイル切り替え機能
+  - リアルタイムでの変更反映
+
+### 実装予定
+- Complex Modificationsの編集UI
+- モディファイアキーの組み合わせ対応
+- プロファイルの作成・複製・削除
+- 特殊キー（メディアキー、ファンクションキー）の完全対応
+- マッピングの検索・フィルタリング機能
+- インポート/エクスポート履歴
 
 ## 今後の開発ノート
 
 プロジェクトが発展するにつれて、このファイルを以下の内容で更新してください：
-- Karabiner設定ファイルの型定義とバリデーションルール
+- Karabiner設定ファイルのバリデーションルール
 - コンポーネントの実装詳細
 - テストとリントの設定
 - パフォーマンス最適化の方法

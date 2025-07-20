@@ -17,12 +17,30 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 - **TypeScript型定義**: `src/types/karabiner.ts` - Karabiner設定の完全な型定義
 - **Zodスキーマ**: `src/types/karabiner-schema.ts` - バリデーション用スキーマ
 - **ファイルアップロード**: `src/components/FileUpload.tsx` - ドラッグ&ドロップ対応
-- **状態管理**: `src/store/karabiner.ts` - Zustandによる設定管理
+- **状態管理**: `src/store/karabiner.ts` - Zustandによる設定管理（ローカルストレージ永続化付き）
 - **基本UI**: ファイルアップロード、エクスポート機能実装済み
+- **ビジュアルキーボードUI**:
+  - `src/components/keyboard/VisualKeyboard.tsx` - VIA/Remap風のビジュアルキーボード表示
+  - `src/components/keyboard/Key.tsx` - 個別キーコンポーネント
+  - `src/data/keyboardLayouts.ts` - US ANSI、JIS、MacBook US/JISレイアウト対応
+- **キーマッピング編集**:
+  - `src/components/KeyMappingEditor.tsx` - モーダルでのキーマッピング編集
+  - ビジュアルキーボードからのキー選択
+  - マッピングの追加、編集、削除機能
+- **キーマッピング表示**: 
+  - ビジュアルキーボードでの現在のマッピング表示（マップ先のキーラベル表示）
+  - `src/components/ComplexModificationsList.tsx` - 複雑な修飾キーの一覧表示
+  - `src/components/ProfileTabs.tsx` - プロファイル切り替えタブ
+  - `src/components/ConfigurationEditor.tsx` - 統合されたエディターUI
+- **エクスポート機能**: JSON形式での設定ファイルダウンロード機能実装済み
+- **開発環境整備**:
+  - Biomeによるコード品質管理（リンター、フォーマッター）
+  - TypeScriptの厳密な型チェック
+  - アクセシビリティ対応（キーボードナビゲーション、ARIA属性）
 
 ## 機能追加計画
 
-### フェーズ1: コア機能（優先度：高）
+### フェーズ1: コア機能（優先度：高） ← 現在ここ
 
 #### 1. Karabiner設定ファイルの型定義とスキーマ作成 ✅
 - [x] karabiner.jsonの基本構造の型定義
@@ -45,41 +63,45 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 
 ### フェーズ2: 基本的な編集機能（優先度：中）
 
-#### 4. キーマッピング一覧表示
-- [ ] simple_modificationsの一覧表示
-- [ ] complex_modificationsの一覧表示
+#### 4. キーマッピング一覧表示 ✅
+- [x] simple_modificationsの一覧表示（ビジュアルキーボード）
+- [x] complex_modificationsの一覧表示
 - [ ] ルールのグループ化表示
 - [ ] 有効/無効の切り替えUI
 
-#### 5. キーマッピング編集フォーム
-- [ ] simple_modifications編集フォーム
+#### 5. キーマッピング編集フォーム ✅
+- [x] simple_modifications編集フォーム（モーダル）
+- [x] キークリックでの編集開始
+- [x] from/toキーの視覚的選択
+- [x] マッピングの削除機能（モーダル内）
 - [ ] complex_modifications編集フォーム
-- [ ] from/toイベントの編集
 - [ ] 条件（conditions）の編集
 - [ ] バリデーションとプレビュー
 
-#### 6. キーコード選択UI
-- [ ] ビジュアルキーボードコンポーネント
+#### 6. キーコード選択UI ✅
+- [x] ビジュアルキーボードコンポーネント
+- [x] US ANSI、JIS、MacBook配列対応
+- [x] マッピング済みキーの視覚的表示
 - [ ] キーコードのオートコンプリート
-- [ ] モディファイアキーの選択
+- [ ] モディファイアキーの組み合わせ選択
 - [ ] 特殊キー（fn、メディアキーなど）のサポート
 
 #### 7. プロファイル管理
-- [ ] プロファイル一覧表示
+- [x] プロファイル一覧表示（タブUI）
 - [ ] プロファイルの作成/複製
 - [ ] プロファイルの削除
 - [ ] デフォルトプロファイルの設定
 
 #### 8. エクスポート機能
 - [ ] 編集内容のリアルタイムプレビュー
-- [ ] karabiner.jsonとしてダウンロード
+- [x] karabiner.jsonとしてダウンロード
 - [ ] 部分的なエクスポート（特定のルールのみ）
 - [ ] エクスポート履歴の記録
 
 ### フェーズ3: UX改善（優先度：低）
 
-#### 9. 一時保存機能
-- [ ] LocalStorageへの自動保存
+#### 9. 一時保存機能（一部実装済み）
+- [x] LocalStorageへの自動保存（Zustand persistによる実装済み）
 - [ ] IndexedDBへの移行（大容量対応）
 - [ ] 複数の作業セッションの管理
 - [ ] 自動復元機能
@@ -142,3 +164,23 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 - **GokuRakuJoudo (Goku)**: EDN形式からkarabiner.jsonを生成
 - **karabiner.ts**: TypeScriptで型安全にルールを記述
 - **Jsonnet**: JSONテンプレート言語
+
+## 次のステップ
+
+フェーズ2の主要な編集機能が完成しました。次の実装予定：
+
+1. **Complex Modifications編集** - ルールの作成・編集UI
+2. **モディファイアキーの組み合わせ** - Ctrl+Shift+Aなどの複合キー対応
+3. **プロファイル管理の拡張** - 作成、複製、削除機能
+4. **特殊キーサポート** - メディアキー、ファンクションキーの完全対応
+5. **検索・フィルタリング機能** - マッピングの検索UI
+
+## 実装済み技術スタック
+
+- **フレームワーク**: React + TypeScript + Vite
+- **スタイリング**: Tailwind CSS + shadcn/ui
+- **状態管理**: Zustand (persist付き)
+- **バリデーション**: Zod
+- **コード品質**: Biome (linter + formatter)
+- **ファイル操作**: react-dropzone, file-saver
+- **アイコン**: lucide-react
