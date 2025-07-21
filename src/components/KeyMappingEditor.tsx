@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { useKarabinerStore } from '@/store/karabiner'
 import type { SimpleModification } from '@/types/karabiner'
 import { VisualKeyboard } from './keyboard/VisualKeyboard'
+import { ModifierKeySelector } from './ModifierKeySelector'
 
 interface KeyMappingEditorProps {
   isOpen: boolean
@@ -24,13 +25,22 @@ export function KeyMappingEditor({
 
   const [fromKey, setFromKey] = useState<string>('')
   const [toKey, setToKey] = useState<string>('')
+  const [fromModifiers, setFromModifiers] = useState<string[]>([])
+  const [toModifiers, setToModifiers] = useState<string[]>([])
   const [layout, setLayout] = useState<LayoutType>('us-ansi')
+  const [showModifiers, setShowModifiers] = useState(false)
 
   // Update state when editingModification changes
   useEffect(() => {
     if (isOpen && editingModification) {
       setFromKey(editingModification.from.key_code || '')
       setToKey(editingModification.to[0]?.key_code || '')
+      setFromModifiers(editingModification.from.modifiers?.mandatory || [])
+      setToModifiers(editingModification.to[0]?.modifiers || [])
+      setShowModifiers(
+        (editingModification.from.modifiers?.mandatory?.length || 0) > 0 ||
+          (editingModification.to[0]?.modifiers?.length || 0) > 0
+      )
     }
   }, [isOpen, editingModification])
 
@@ -40,8 +50,18 @@ export function KeyMappingEditor({
     if (!fromKey || !toKey) return
 
     const modification: SimpleModification = {
-      from: { key_code: fromKey },
-      to: [{ key_code: toKey }]
+      from: {
+        key_code: fromKey,
+        ...(fromModifiers.length > 0 && {
+          modifiers: { mandatory: fromModifiers }
+        })
+      },
+      to: [
+        {
+          key_code: toKey,
+          ...(toModifiers.length > 0 && { modifiers: toModifiers })
+        }
+      ]
     }
 
     if (editingIndex !== null && editingIndex !== undefined) {
@@ -56,6 +76,9 @@ export function KeyMappingEditor({
   const handleClose = () => {
     setFromKey('')
     setToKey('')
+    setFromModifiers([])
+    setToModifiers([])
+    setShowModifiers(false)
     onClose()
   }
 
@@ -116,6 +139,11 @@ export function KeyMappingEditor({
             <div className="px-6 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">From</div>
               <div className="text-lg font-mono font-semibold text-gray-900 dark:text-gray-100">
+                {fromModifiers.length > 0 && (
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {fromModifiers.join(' + ')} +
+                  </span>
+                )}
                 {fromKey}
               </div>
             </div>
@@ -125,6 +153,11 @@ export function KeyMappingEditor({
             <div className="px-6 py-3 rounded-lg border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/30">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">To</div>
               <div className="text-lg font-mono font-semibold text-gray-900 dark:text-gray-100">
+                {toModifiers.length > 0 && (
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {toModifiers.join(' + ')} +
+                  </span>
+                )}
                 {toKey || 'Select key'}
               </div>
             </div>
@@ -140,6 +173,43 @@ export function KeyMappingEditor({
               onToKeySelect={handleToKeySelect}
             />
           </div>
+
+          {/* Modifier toggle */}
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowModifiers(!showModifiers)}
+              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
+            >
+              {showModifiers ? 'Hide' : 'Show'} modifier keys
+            </button>
+          </div>
+
+          {/* Modifier selectors */}
+          {showModifiers && (
+            <div className="space-y-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                  From Key Modifiers
+                </h3>
+                <ModifierKeySelector
+                  selectedModifiers={fromModifiers}
+                  onModifiersChange={setFromModifiers}
+                  mode="mandatory"
+                />
+              </div>
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                  To Key Modifiers
+                </h3>
+                <ModifierKeySelector
+                  selectedModifiers={toModifiers}
+                  onModifiersChange={setToModifiers}
+                  mode="mandatory"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Instructions */}
           <div className="text-sm text-gray-600 dark:text-gray-400 text-center">

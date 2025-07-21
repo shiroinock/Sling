@@ -32,10 +32,17 @@ export function VisualKeyboard({
   const [hoveredKey, setHoveredKey] = useState<string | null>(null)
 
   // Create a map of key mappings for quick lookup
-  const mappingsMap = new Map<string, string>()
+  const mappingsMap = new Map<
+    string,
+    { toKey: string; fromModifiers?: string[]; toModifiers?: string[] }
+  >()
   simpleModifications.forEach(mod => {
     if (mod.from.key_code && mod.to[0]?.key_code) {
-      mappingsMap.set(mod.from.key_code, mod.to[0].key_code)
+      mappingsMap.set(mod.from.key_code, {
+        toKey: mod.to[0].key_code,
+        fromModifiers: mod.from.modifiers?.mandatory,
+        toModifiers: mod.to[0].modifiers
+      })
     }
   })
 
@@ -91,7 +98,8 @@ export function VisualKeyboard({
                 const isFromKey = selectedFromKey === keyData.keyCode
                 const isToKey = selectedToKey === keyData.keyCode
                 const isMapped = mappingsMap.has(keyData.keyCode)
-                const mappedTo = mappingsMap.get(keyData.keyCode)
+                const mappingInfo = mappingsMap.get(keyData.keyCode)
+                const mappedTo = mappingInfo?.toKey
 
                 let isSelected = false
                 if (mode === 'from') {
@@ -114,6 +122,8 @@ export function VisualKeyboard({
                       isSelected={isSelected}
                       isMapped={isMapped}
                       mappedTo={mappedTo}
+                      fromModifiers={mappingInfo?.fromModifiers}
+                      toModifiers={mappingInfo?.toModifiers}
                       onClick={handleKeyClick}
                       onMouseEnter={setHoveredKey}
                       onMouseLeave={() => setHoveredKey(null)}

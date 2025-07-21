@@ -1,11 +1,29 @@
 import type { KeyData } from '@/data/keyboardLayouts'
 import { cn } from '@/lib/utils'
 
+function getModifierSymbol(modifier: string): string {
+  const symbols: Record<string, string> = {
+    left_command: '⌘',
+    right_command: '⌘',
+    left_option: '⌥',
+    right_option: '⌥',
+    left_control: '⌃',
+    right_control: '⌃',
+    left_shift: '⇧',
+    right_shift: '⇧',
+    fn: 'fn',
+    caps_lock: '⇪'
+  }
+  return symbols[modifier] || modifier
+}
+
 interface KeyProps {
   keyData: KeyData
   isSelected?: boolean
   isMapped?: boolean
   mappedTo?: string
+  fromModifiers?: string[]
+  toModifiers?: string[]
   onClick?: (keyCode: string) => void
   onMouseEnter?: (keyCode: string) => void
   onMouseLeave?: () => void
@@ -17,6 +35,7 @@ export function Key({
   isSelected,
   isMapped,
   mappedTo,
+  toModifiers,
   onClick,
   onMouseEnter,
   onMouseLeave,
@@ -70,19 +89,26 @@ export function Key({
       )}
 
       {/* Main label - show mapped key if mapped, otherwise show original */}
-      <span
-        className={cn(
-          'text-sm font-medium',
-          isSelected
-            ? 'text-blue-700 dark:text-blue-300'
-            : isMapped
-              ? 'text-green-700 dark:text-green-300'
-              : 'text-gray-700 dark:text-gray-300',
-          (isMapped && mappedTo ? mappedTo.length : label.length) > 5 && 'text-xs'
+      <div className="flex flex-col items-center">
+        {isMapped && toModifiers && toModifiers.length > 0 && (
+          <span className="text-xs text-green-600 dark:text-green-400 mb-0.5">
+            {toModifiers.map(m => getModifierSymbol(m)).join('')}
+          </span>
         )}
-      >
-        {isMapped && mappedTo ? mappedTo : label}
-      </span>
+        <span
+          className={cn(
+            'text-sm font-medium',
+            isSelected
+              ? 'text-blue-700 dark:text-blue-300'
+              : isMapped
+                ? 'text-green-700 dark:text-green-300'
+                : 'text-gray-700 dark:text-gray-300',
+            (isMapped && mappedTo ? mappedTo.length : label.length) > 5 && 'text-xs'
+          )}
+        >
+          {isMapped && mappedTo ? mappedTo : label}
+        </span>
+      </div>
     </button>
   )
 }

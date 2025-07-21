@@ -94,7 +94,9 @@ sling/
 │   │   ├── FileUpload.tsx         # ファイルアップロードコンポーネント
 │   │   ├── ConfigurationEditor.tsx # メイン編集UI
 │   │   ├── ProfileTabs.tsx        # プロファイル切り替えタブ
+│   │   ├── ProfileManager.tsx     # プロファイル管理モーダル
 │   │   ├── KeyMappingEditor.tsx   # キーマッピング編集モーダル
+│   │   ├── ModifierKeySelector.tsx # モディファイアキー選択UI
 │   │   ├── ComplexModificationsList.tsx # 複雑な修飾キー一覧
 │   │   ├── keyboard/              # キーボード関連コンポーネント
 │   │   │   ├── VisualKeyboard.tsx # ビジュアルキーボード
@@ -145,16 +147,23 @@ sling/
   - US ANSI、JIS、MacBook US/JISレイアウト対応
   - キークリックでマッピング編集開始
   - マッピング済みキーの視覚的表示（マップ先のキーラベル表示）
+  - モディファイアキー付きマッピングの表示（⌘⌥⇧などのシンボル）
 - **Simple Modifications編集**
   - Simple Modificationsの追加・編集・削除
   - モーダルでの直感的な編集UI
   - ビジュアルキーボードからのキー選択
-- **Complex Modifications編集** ✨ NEW
+  - モディファイアキーの組み合わせ対応（Ctrl+Shift+Aなど）
+- **Complex Modifications編集**
   - Complex Modificationsルールの作成・編集・削除
   - Manipulatorの追加・編集・削除
   - From/Toイベントの詳細設定
   - 条件（Conditions）の設定UI
   - タブによる整理されたインターフェース
+- **プロファイル管理**
+  - プロファイルの作成・複製・削除
+  - プロファイル名のインライン編集
+  - デフォルトプロファイルの設定
+  - プロファイル管理専用モーダル
 - **状態管理**
   - Zustandによる設定管理（ローカルストレージ永続化付き）
   - プロファイル切り替え機能
@@ -163,14 +172,15 @@ sling/
   - shadcn/ui準拠のコンポーネント群
   - Dialog、Tabs、Select、Badge、Button、Input、Label
   - ダークモード対応の色設定（適切なコントラスト）
+  - ModifierKeySelector（モディファイアキー選択UI）
+  - ProfileManager（プロファイル管理モーダル）
 
 ### 実装予定
-- モディファイアキーの組み合わせ対応（Complex Modificationsで部分対応済み）
-- プロファイルの作成・複製・削除
 - 特殊キー（メディアキー、ファンクションキー）の完全対応
 - マッピングの検索・フィルタリング機能
 - インポート/エクスポート履歴
 - ルールのグループ化と有効/無効切り替え
+- ダークモードの手動切り替えトグル
 
 ## 今後の開発ノート
 
