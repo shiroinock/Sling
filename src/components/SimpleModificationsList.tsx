@@ -33,11 +33,11 @@ export function SimpleModificationsList() {
         >
           <div className="flex items-center space-x-4">
             <code className="px-3 py-1 bg-white dark:bg-gray-800 rounded-md font-mono text-sm">
-              {mod.from.key_code}
+              {mod.from.key_code || mod.from.consumer_key_code || mod.from.pointing_button || 'any'}
             </code>
             <ArrowRight className="w-4 h-4 text-gray-400" />
             <code className="px-3 py-1 bg-white dark:bg-gray-800 rounded-md font-mono text-sm">
-              {mod.to[0].key_code}
+              {mod.to[0]?.key_code || mod.to[0]?.consumer_key_code || mod.to[0]?.pointing_button || 'unknown'}
             </code>
           </div>
           <div className="flex items-center gap-2">

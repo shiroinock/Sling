@@ -6,6 +6,8 @@ import { useKarabinerStore } from '@/store/karabiner'
 import type { SimpleModification } from '@/types/karabiner'
 import { VisualKeyboard } from './keyboard/VisualKeyboard'
 import { ModifierKeySelector } from './ModifierKeySelector'
+import { SpecialKeySelector } from './SpecialKeySelector'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface KeyMappingEditorProps {
   isOpen: boolean
@@ -34,7 +36,13 @@ export function KeyMappingEditor({
   useEffect(() => {
     if (isOpen && editingModification) {
       setFromKey(editingModification.from.key_code || '')
-      setToKey(editingModification.to[0]?.key_code || '')
+      // Handle both key_code and consumer_key_code
+      const toEvent = editingModification.to[0]
+      if (toEvent?.consumer_key_code) {
+        setToKey(`consumer_${toEvent.consumer_key_code}`)
+      } else {
+        setToKey(toEvent?.key_code || '')
+      }
       setFromModifiers(editingModification.from.modifiers?.mandatory || [])
       setToModifiers(editingModification.to[0]?.modifiers || [])
       setShowModifiers(
@@ -58,7 +66,10 @@ export function KeyMappingEditor({
       },
       to: [
         {
-          key_code: toKey,
+          // Check if it's a consumer key (media key, etc.)
+          ...(toKey.startsWith('consumer_') 
+            ? { consumer_key_code: toKey.replace('consumer_', '') }
+            : { key_code: toKey }),
           ...(toModifiers.length > 0 && { modifiers: toModifiers })
         }
       ]
@@ -90,7 +101,15 @@ export function KeyMappingEditor({
   }
 
   const handleToKeySelect = (keyCode: string) => {
-    setToKey(keyCode)
+    // Handle consumer key codes
+    if (keyCode.startsWith('consumer_')) {
+      const consumerKeyCode = keyCode.replace('consumer_', '')
+      setToKey(consumerKeyCode)
+      // Consumer keys are stored differently in Karabiner
+      // We'll handle this in the save function
+    } else {
+      setToKey(keyCode)
+    }
   }
 
   return (
@@ -158,21 +177,36 @@ export function KeyMappingEditor({
                     {toModifiers.join(' + ')} +
                   </span>
                 )}
-                {toKey || 'Select key'}
+                {toKey.startsWith('consumer_') ? toKey.replace('consumer_', '') : toKey || 'Select key'}
               </div>
             </div>
           </div>
 
-          {/* Visual keyboard */}
-          <div className="flex justify-center">
-            <VisualKeyboard
-              layout={layout}
-              mode="to"
-              selectedFromKey={fromKey}
-              selectedToKey={toKey}
-              onToKeySelect={handleToKeySelect}
-            />
-          </div>
+          {/* Key selection tabs */}
+          <Tabs defaultValue="keyboard" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="keyboard">キーボード</TabsTrigger>
+              <TabsTrigger value="special">特殊キー</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="keyboard" className="mt-4">
+              {/* Visual keyboard */}
+              <div className="flex justify-center">
+                <VisualKeyboard
+                  layout={layout}
+                  mode="to"
+                  selectedFromKey={fromKey}
+                  selectedToKey={toKey}
+                  onToKeySelect={handleToKeySelect}
+                />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="special" className="mt-4">
+              {/* Special keys selector */}
+              <SpecialKeySelector onKeySelect={handleToKeySelect} />
+            </TabsContent>
+          </Tabs>
 
           {/* Modifier toggle */}
           <div className="flex justify-center">

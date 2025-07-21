@@ -97,6 +97,7 @@ sling/
 │   │   ├── ProfileManager.tsx     # プロファイル管理モーダル
 │   │   ├── KeyMappingEditor.tsx   # キーマッピング編集モーダル
 │   │   ├── ModifierKeySelector.tsx # モディファイアキー選択UI
+│   │   ├── SpecialKeySelector.tsx # 特殊キー選択UI
 │   │   ├── ComplexModificationsList.tsx # 複雑な修飾キー一覧
 │   │   ├── keyboard/              # キーボード関連コンポーネント
 │   │   │   ├── VisualKeyboard.tsx # ビジュアルキーボード
@@ -174,9 +175,18 @@ sling/
   - ダークモード対応の色設定（適切なコントラスト）
   - ModifierKeySelector（モディファイアキー選択UI）
   - ProfileManager（プロファイル管理モーダル）
+  - SpecialKeySelector（特殊キー選択UI）
+- **特殊キー対応**
+  - ファンクションキー（F1-F24）の完全対応
+  - メディアキー（再生/一時停止、音量調整など）
+  - ディスプレイ輝度調整キー
+  - システムキー（Mission Control、Launchpad、Dashboard）
+  - ナビゲーションキー（Page Up/Down、Home、End など）
+  - テンキー対応
+  - Consumer key codeの適切な処理
+  - タブによる特殊キー選択UI
 
 ### 実装予定
-- 特殊キー（メディアキー、ファンクションキー）の完全対応
 - マッピングの検索・フィルタリング機能
 - インポート/エクスポート履歴
 - ルールのグループ化と有効/無効切り替え
