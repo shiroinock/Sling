@@ -1,184 +1,196 @@
 # Sling 開発計画
 
 ## プロジェクト概要
-SlingはKarabiner-Elements用のキーマッピングWeb GUIです。静的サイトとして動作し、ブラウザ上で設定ファイルの編集・エクスポートが可能です。
+SlingはKarabiner-Elements用のキーマッピングWeb GUIです。静的サイトとして動作し、ブラウザ上で設定ファイルの編集・エクスポートが可能です。将来的にはQMKファームウェアのレイヤー機能をKarabiner-Elements上で実現し、QMKキーコードで動作を定義できるようにすることで、自作キーボードユーザーがQMKと同じ感覚でKarabinerの設定を行えるようになります。
 
-## Karabiner-Elementsリポジトリの活用
+## 参考資料
+- [Karabiner-Elements公式ドキュメント](https://karabiner-elements.pqrs.org/docs/)
+- [設定ファイルリファレンス](https://karabiner-elements.pqrs.org/docs/json/)
+- [Complex Modifications例](https://karabiner-elements.pqrs.org/docs/json/typical-complex-modifications-examples/)
+- [QMKのレイヤー機能をKarabinerで実装する記事](https://note.com/illlilllililill/n/n77d46071d088)
+- [QMK公式ドキュメント](https://docs.qmk.fm/)
 
-Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabiner-Elements)ですが、公式のJSONスキーマは提供されていません。そのため、以下のアプローチを取ります：
-
-1. **公式ドキュメントの参照**: [Karabiner Configuration Reference Manual](https://karabiner-elements.pqrs.org/docs/json/)
-2. **設定ファイル構造の理解**: karabiner.jsonの構造を分析し、TypeScript型定義を作成
-3. **サンプルファイルの収集**: 実際の設定ファイルをテストデータとして使用
-
-## 実装状況
+## 現在の実装状況
 
 ### 完了済み機能
 - **TypeScript型定義**: `src/types/karabiner.ts` - Karabiner設定の完全な型定義
 - **Zodスキーマ**: `src/types/karabiner-schema.ts` - バリデーション用スキーマ
 - **ファイルアップロード**: `src/components/FileUpload.tsx` - ドラッグ&ドロップ対応
 - **状態管理**: `src/store/karabiner.ts` - Zustandによる設定管理（ローカルストレージ永続化付き）
-- **基本UI**: ファイルアップロード、エクスポート機能実装済み
 - **ビジュアルキーボードUI**:
-  - `src/components/keyboard/VisualKeyboard.tsx` - VIA/Remap風のビジュアルキーボード表示
-  - `src/components/keyboard/Key.tsx` - 個別キーコンポーネント
-  - `src/data/keyboardLayouts.ts` - US ANSI、JIS、MacBook US/JISレイアウト対応
-- **キーマッピング編集**:
-  - `src/components/KeyMappingEditor.tsx` - モーダルでのキーマッピング編集
+  - VIA/Remap風のビジュアルキーボード表示
+  - US ANSI、JIS、MacBook US/JISレイアウト対応
+  - キークリックでマッピング編集開始
+  - マッピング済みキーの視覚的表示（マップ先のキーラベル表示）
+  - モディファイアキー付きマッピングの表示（⌘⌥⇧などのシンボル）
+- **Simple Modifications編集**:
+  - Simple Modificationsの追加・編集・削除
+  - モーダルでの直感的な編集UI
   - ビジュアルキーボードからのキー選択
-  - マッピングの追加、編集、削除機能
-- **キーマッピング表示**: 
-  - ビジュアルキーボードでの現在のマッピング表示（マップ先のキーラベル表示）
-  - `src/components/ComplexModificationsList.tsx` - 複雑な修飾キーの一覧表示
-  - `src/components/ProfileTabs.tsx` - プロファイル切り替えタブ
-  - `src/components/ConfigurationEditor.tsx` - 統合されたエディターUI
-- **エクスポート機能**: JSON形式での設定ファイルダウンロード機能実装済み
-- **開発環境整備**:
-  - Biomeによるコード品質管理（リンター、フォーマッター）
-  - TypeScriptの厳密な型チェック
-  - アクセシビリティ対応（キーボードナビゲーション、ARIA属性）
+  - モディファイアキーの組み合わせ対応（Ctrl+Shift+Aなど）
+- **Complex Modifications編集**:
+  - Complex Modificationsルールの作成・編集・削除
+  - Manipulatorの追加・編集・削除
+  - From/Toイベントの詳細設定
+  - 条件（Conditions）の設定UI
+  - タブによる整理されたインターフェース
+- **プロファイル管理**:
+  - プロファイルの作成・複製・削除
+  - プロファイル名のインライン編集
+  - デフォルトプロファイルの設定
+  - プロファイル管理専用モーダル
+- **特殊キー対応**:
+  - ファンクションキー（F1-F24）の完全対応
+  - メディアキー（再生/一時停止、音量調整など）
+  - ディスプレイ輝度調整キー
+  - システムキー（Mission Control、Launchpad、Dashboard）
+  - ナビゲーションキー（Page Up/Down、Home、End など）
+  - テンキー対応
+  - Consumer key codeの適切な処理
+- **検索・フィルタリング機能**:
+  - Simple/Complex Modifications両方で検索機能実装
+  - リアルタイムフィルタリング
+  - 検索結果のハイライト表示（黄色のリング）
+- **インポート/エクスポート履歴**:
+  - 最大20件の操作履歴を保存
+  - タイムスタンプと統計情報の表示
+- **ルールのグループ化と有効/無効切り替え**:
+  - Complex Modificationsのグループ別整理
+  - 折りたたみ可能なグループUI
+  - 個別ルールの有効/無効トグル
+- **ダークモード対応**:
+  - システム設定の自動検出
+  - 手動切り替えトグル
+  - ローカルストレージでの設定永続化
 
-## 機能追加計画
+## 開発ロードマップ
 
-### フェーズ1: コア機能（優先度：高） ← 現在ここ
+### 緊急修正項目（GitHubイシュー）
+- [ ] **#6** ダークモード有効無効が効かない - ダークモード切り替え機能の修正
+- [ ] **#8** ビジュアルキーボードのキーの配置がズレている - キーレイアウトの位置調整
 
-#### 1. Karabiner設定ファイルの型定義とスキーマ作成 ✅
-- [x] karabiner.jsonの基本構造の型定義
-- [x] プロファイル（profiles）の型定義
-- [x] simple_modificationsの型定義
-- [x] complex_modificationsの型定義
-- [x] Zodスキーマによるバリデーション実装
+### フェーズ0: UX改善と国際化（1週間）
+- [ ] **#4** karabiner.jsonを開いたとき、デフォルトのプロファイルのタブにフォーカスする
+- [ ] **#5** ビジュアルキーボードの配列の選択を記憶し、ページを開き直したときにも反映された状態にする
+- [ ] **#9** ビジュアルキーボードの配列、macbookのUS配列をデフォルトにする
+- [ ] **#7** 日本語、英語の切り替え対応（i18n対応）
+  - 辞書をJSONで管理
+  - 将来的な多言語展開を視野に入れた実装
+  - react-i18nextなどの国際化ライブラリの導入
 
-#### 2. ファイルアップロード機能 ✅
-- [x] react-dropzoneコンポーネントの実装
-- [x] ドラッグ&ドロップエリアのUI
-- [x] ファイル選択ボタン
-- [x] アップロードされたファイルの基本検証
+### フェーズ1: 残りの基本機能（1-2週間）
+- [ ] キーボードショートカット対応
+- [ ] 設定のバックアップ/リストア機能
+- [ ] ルールのインポート/エクスポート（個別）
+- [ ] キーマッピングのプリセット集
 
-#### 3. 設定ファイルのパーサーとバリデーション ✅
-- [x] JSONパースエラーのハンドリング
-- [x] Karabiner設定構造の検証
-- [x] エラーメッセージの表示
-- [x] 有効な設定の状態管理（Zustand）
+### フェーズ2: QMKレイヤー基本実装（2-3週間）
+- [ ] レイヤー管理システムの設計
+  - レイヤー状態の管理（最大32レイヤー対応）
+  - デフォルトレイヤーと一時レイヤーの概念
+  - レイヤースタックの実装
+- [ ] レイヤー設定の型定義
+  - QMKレイヤー構造のTypeScript型定義
+  - Karabiner設定への変換ロジック
+- [ ] 基本的なレイヤー切り替え機能
+  - MO(layer) - 押している間だけレイヤー有効
+  - TG(layer) - レイヤーのトグル
+  - TO(layer) - レイヤーへの切り替え
+  - DF(layer) - デフォルトレイヤーの設定
 
-### フェーズ2: 基本的な編集機能（優先度：中）
+### フェーズ3: QMKキーコードマッピング（2-3週間）
+- [ ] 基本キーコード（KC_A〜KC_Z、KC_1〜KC_0など）
+- [ ] モディファイアキー（KC_LCTL、KC_LSFT、KC_LALT、KC_LGUI）
+- [ ] 特殊キー（KC_ESC、KC_TAB、KC_BSPC、KC_DEL、KC_ENT）
+- [ ] ファンクションキー（KC_F1〜KC_F24）
+- [ ] メディアキー（KC_MUTE、KC_VOLU、KC_VOLD、KC_MPLY など）
+- [ ] マウスキー（KC_MS_U、KC_MS_D、KC_MS_L、KC_MS_R、KC_BTN1、KC_BTN2）
+- [ ] QMK固有のキーコード
+  - KC_TRNS（透過）
+  - KC_NO（無効）
+  - レイヤー切り替えキーコード
 
-#### 4. キーマッピング一覧表示 ✅
-- [x] simple_modificationsの一覧表示（ビジュアルキーボード）
-- [x] complex_modificationsの一覧表示
-- [ ] ルールのグループ化表示
-- [ ] 有効/無効の切り替えUI
+### フェーズ4: レイヤーUI実装（2-3週間）
+- [ ] レイヤータブUI
+  - レイヤーの追加・削除・名前変更
+  - レイヤーの並び替え
+  - アクティブレイヤーの視覚的表示
+- [ ] レイヤー別キーマッピング表示
+  - 各レイヤーでのキー配置を個別に表示
+  - 透過キー（KC_TRNS）の視覚的表現
+  - レイヤー継承の可視化
+- [ ] レイヤープレビュー機能
+  - 複数レイヤーの重ね合わせ表示
+  - 実際のキー動作のプレビュー
 
-#### 5. キーマッピング編集フォーム ✅
-- [x] simple_modifications編集フォーム（モーダル）
-- [x] キークリックでの編集開始
-- [x] from/toキーの視覚的選択
-- [x] マッピングの削除機能（モーダル内）
-- [x] モディファイアキーの組み合わせ対応
-- [x] complex_modifications編集フォーム
-- [x] 条件（conditions）の編集
-- [x] バリデーションとプレビュー
+### フェーズ5: 高度なQMK機能（3-4週間）
+- [ ] Mod-Tap（MT）
+  - タップで通常キー、ホールドでモディファイア
+  - LCTL_T(KC_A) のような記法のサポート
+- [ ] Layer-Tap（LT）
+  - タップで通常キー、ホールドでレイヤー切り替え
+  - LT(1, KC_SPC) のような記法のサポート
+- [ ] タップダンス（TD）
+  - 複数回タップで異なる動作
+  - カスタムタップダンスの定義
+- [ ] タイミング設定
+  - TAPPING_TERM の設定UI
+  - PERMISSIVE_HOLD、IGNORE_MOD_TAP_INTERRUPT などの設定
 
-#### 6. キーコード選択UI ✅
-- [x] ビジュアルキーボードコンポーネント
-- [x] US ANSI、JIS、MacBook配列対応
-- [x] マッピング済みキーの視覚的表示
-- [x] モディファイアキーの組み合わせ選択
-- [x] モディファイアキー付きマッピングの表示
-- [x] 特殊キー（fn、メディアキーなど）のサポート
-- [ ] キーコードのオートコンプリート
+### フェーズ6: 最終調整とリリース（1-2週間）
+- [ ] テスト・バグ修正
+- [ ] パフォーマンス最適化
+- [ ] ドキュメント作成
+- [ ] サンプル設定の追加
+- [ ] Cloudflare Pagesへのデプロイ設定
 
-#### 7. プロファイル管理 ✅
-- [x] プロファイル一覧表示（タブUI）
-- [x] プロファイルの作成/複製
-- [x] プロファイルの削除
-- [x] デフォルトプロファイルの設定
-- [x] プロファイル名のインライン編集
-- [x] プロファイル管理モーダル
+## 技術設計
 
-#### 8. エクスポート機能
-- [ ] 編集内容のリアルタイムプレビュー
-- [x] karabiner.jsonとしてダウンロード
-- [ ] 部分的なエクスポート（特定のルールのみ）
-- [ ] エクスポート履歴の記録
+### QMKレイヤー機能のデータ構造
 
-### フェーズ3: UX改善（優先度：低）
-
-#### 9. 一時保存機能（一部実装済み）
-- [x] LocalStorageへの自動保存（Zustand persistによる実装済み）
-- [ ] IndexedDBへの移行（大容量対応）
-- [ ] 複数の作業セッションの管理
-- [ ] 自動復元機能
-
-#### 10. 検索・フィルタリング
-- [ ] キーマッピングの全文検索
-- [ ] キーコードによるフィルタ
-- [ ] アプリケーション別フィルタ
-- [ ] 高度な検索オプション
-
-#### 11. インポート/エクスポート履歴
-- [ ] 操作履歴の記録
-- [ ] 履歴からの復元
-- [ ] 差分表示
-- [ ] 履歴のエクスポート
-
-#### 12. ダークモード対応
-- [ ] システム設定の検出
-- [ ] 手動切り替えトグル
-- [ ] テーマのカスタマイズ
-- [ ] アクセシビリティ対応
-
-## 技術的な考慮事項
-
-### Karabiner設定ファイルの構造
-```json
-{
-  "global": {
-    "check_for_updates_on_startup": true,
-    "show_in_menu_bar": true,
-    "show_profile_name_in_menu_bar": false
-  },
-  "profiles": [
-    {
-      "name": "Default profile",
-      "selected": true,
-      "simple_modifications": [],
-      "fn_function_keys": [],
-      "complex_modifications": {
-        "parameters": {},
-        "rules": []
-      },
-      "virtual_hid_keyboard": {
-        "keyboard_type": "ansi",
-        "caps_lock_delay_milliseconds": 0
-      },
-      "devices": []
-    }
-  ]
+```typescript
+interface QMKLayer {
+  id: number;
+  name: string;
+  keymap: QMKKeymap;
+  isDefault?: boolean;
 }
+
+interface QMKKeymap {
+  [position: string]: QMKKeycode | QMKKeyDefinition;
+}
+
+interface QMKKeyDefinition {
+  tap?: QMKKeycode;
+  hold?: QMKKeycode;
+  layer?: number;
+  type: 'mt' | 'lt' | 'td' | 'basic';
+}
+
+type QMKKeycode = 
+  | 'KC_A' | 'KC_B' | ... // 基本キー
+  | 'KC_LCTL' | 'KC_LSFT' | ... // モディファイア
+  | 'KC_TRNS' | 'KC_NO' // 特殊キー
+  | `MO(${number})` | `TG(${number})` | ... // レイヤーキー
+  | `LCTL_T(${string})` | `LT(${number}, ${string})` // Mod-Tap/Layer-Tap
 ```
 
-### 参考リソース
-- [Karabiner-Elements公式ドキュメント](https://karabiner-elements.pqrs.org/docs/)
-- [設定ファイルリファレンス](https://karabiner-elements.pqrs.org/docs/json/)
-- [Complex Modifications例](https://karabiner-elements.pqrs.org/docs/json/typical-complex-modifications-examples/)
-- [外部JSONジェネレーター](https://karabiner-elements.pqrs.org/docs/json/external-json-generators/)
+### Karabiner変換ロジック
 
-### コミュニティツール
-- **GokuRakuJoudo (Goku)**: EDN形式からkarabiner.jsonを生成
-- **karabiner.ts**: TypeScriptで型安全にルールを記述
-- **Jsonnet**: JSONテンプレート言語
+1. QMKキーコードをKarabinerのkey_codeに変換
+2. レイヤー状態を変数で管理
+3. レイヤー切り替えをcomplex_modificationsで実装
+4. タップ/ホールドをto_if_alone/to_if_held_downで実装
 
-## 次のステップ
+### UI/UXデザイン方針
 
-フェーズ2の主要な編集機能が完成し、フェーズ3のUX改善機能も大幅に進捗しました。次の実装予定：
+- QMK Configuratorに似たビジュアルキーボードUI
+- レイヤーごとのタブ表示
+- ドラッグ&ドロップでのキー配置
+- QMKキーコードの検索・選択UI
+- リアルタイムプレビュー
 
-1. **キーボードショートカット対応** - アプリ内でのキーボード操作
-2. **設定のバックアップ/リストア機能** - 安全な設定管理
-3. **ルールのインポート/エクスポート** - 個別ルールの共有
-4. **キーマッピングのプリセット集** - 一般的な設定テンプレート
-
-## 実装済み技術スタック
+## 技術スタック
 
 - **フレームワーク**: React + TypeScript + Vite
 - **スタイリング**: Tailwind CSS + shadcn/ui
@@ -187,70 +199,44 @@ Karabiner-Elementsは[オープンソース](https://github.com/pqrs-org/Karabin
 - **コード品質**: Biome (linter + formatter)
 - **ファイル操作**: react-dropzone, file-saver
 - **アイコン**: lucide-react
+- **デプロイ**: Cloudflare Pages
 
-## 最近の更新内容
+## UI/UXガイドライン
 
-### 2025年7月 - 主要機能の実装
+### カラースキーム
+プロジェクト全体で統一されたカラースキームを使用しています：
 
-#### Complex Modifications編集機能
-- Complex Modificationsルールの作成・編集・削除機能を実装
-- Manipulator、From/Toイベント、Conditionsの包括的な編集UI
-- タブによる整理されたインターフェース
+#### テキストカラー
+- **見出し・ラベル**: `text-gray-700 dark:text-gray-200`
+- **本文**: `text-gray-900 dark:text-gray-100`
+- **補助テキスト**: `text-gray-600 dark:text-gray-400`
+- **プレースホルダー**: `placeholder:text-gray-400 dark:placeholder:text-gray-500`
 
-#### モディファイアキーの組み合わせ対応
-- Simple Modificationsでモディファイアキーの組み合わせをサポート
-- ModifierKeySelectorコンポーネントの実装
-- ビジュアルキーボードでのモディファイアキー表示（⌘⌥⇧シンボル）
-- KeyMappingEditorでのモディファイアキー編集UI
+#### 背景色
+- **プライマリ背景**: `bg-white dark:bg-gray-900`
+- **セカンダリ背景**: `bg-gray-50 dark:bg-gray-800`
+- **ホバー背景**: `hover:bg-gray-50 dark:hover:bg-gray-700`
 
-#### プロファイル管理機能
-- プロファイルの作成・複製・削除機能を実装
-- ProfileManagerモーダルの作成
-- プロファイル名のインライン編集
-- デフォルトプロファイルの設定機能
-- ProfileTabsに設定アイコン追加
+#### ボーダー
+- **通常**: `border-gray-200 dark:border-gray-700`
+- **入力フィールド**: `border-gray-300 dark:border-gray-600`
 
-#### UI/UX改善
-- ダークモード対応のUI改善
-  - 背景色とテキストカラーのコントラスト改善
-  - Input、Select、Button、Badge等のUIコンポーネントの色調整
-  - ライトモード・ダークモード両方での視認性向上
-- アクセシビリティの改善（autoFocusの代わりにuseEffectを使用）
+#### アクセントカラー
+- **プライマリ**: `blue-600` (ボタン、リンク、フォーカス)
+- **成功**: `green-500` (マッピング済みキー)
+- **エラー**: `red-500` (削除ボタン)
 
-#### 特殊キー対応
-- SpecialKeySelectorコンポーネントの実装
-  - ファンクションキー（F1-F24）の完全対応
-  - メディアキー（再生/一時停止、音量調整、早送り/巻き戻し）
-  - ディスプレイ輝度調整キー（通常、Apple Display、Touch Bar）
-  - システムキー（電源、Mission Control、Launchpad、Dashboard）
+## 期待される成果
 
-### 2025年7月 - UX機能の実装
+- Karabinerの設定を視覚的かつ直感的に編集できるツール
+- QMKユーザーが違和感なくKarabinerを使えるようになる
+- 複雑なレイヤー設定が視覚的に管理できる
+- QMKとKarabinerの架け橋となるツール
+- 自作キーボードコミュニティへの貢献
 
-#### 検索・フィルタリング機能
-- Simple ModificationsとComplex Modifications両方に検索バーを追加
-- リアルタイムでキーラベル、キーコード、マッピング先を検索
-- 検索結果のハイライト表示（黄色のリング）
-- ビジュアルキーボード上での検索結果の強調表示
+## 注意事項
 
-#### インポート/エクスポート履歴
-- ImportExportHistoryコンポーネントの実装
-- 最大20件の操作履歴を保存
-- タイムスタンプ、ファイル名、プロファイル数、ルール数を表示
-- 専用のHistoryタブを追加
-
-#### ルールのグループ化と有効/無効切り替え
-- Complex Modificationsルールにgroupプロパティを追加
-- グループ別の折りたたみ可能なUI
-- 個別ルールの有効/無効トグルスイッチ
-- グループ内の有効ルール数表示
-
-#### ダークモード対応
-- DarkModeToggleコンポーネントの実装
-- システム設定の自動検出
-- 手動切り替えトグル（ヘッダーに配置）
-- ローカルストレージでの設定永続化
-  - ナビゲーションキー（Page Up/Down、Home、End、Insert、Print Screen など）
-  - テンキー対応（数字、演算子、Num Lock）
-- Consumer key codeの適切な処理
-- KeyMappingEditorにタブによる特殊キー選択UI統合
-- SimpleModificationsListでの特殊キー表示対応
+- Karabinerの制限により、完全なQMK互換は難しい場合がある
+- パフォーマンスを考慮した実装が必要
+- 既存のKarabiner設定との互換性を保つ
+- 静的サイトとしての制限を考慮した設計
