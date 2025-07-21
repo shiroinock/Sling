@@ -63,7 +63,9 @@ export const useKarabinerStore = create<KarabinerState>()(
             // Add import history entry
             if (config) {
               // Find the default profile (the one with selected: true)
-              const defaultProfileIndex = config.profiles.findIndex(profile => profile.selected === true)
+              const defaultProfileIndex = config.profiles.findIndex(
+                profile => profile.selected === true
+              )
               const selectedProfileIndex = defaultProfileIndex >= 0 ? defaultProfileIndex : 0
 
               const newHistory: ImportExportHistory = {
