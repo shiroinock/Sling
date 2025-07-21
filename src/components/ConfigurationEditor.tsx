@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver'
 import { Download, FileUp, Plus, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { LayoutType } from '@/data/keyboardLayouts'
 import type { SimpleModification } from '@/types/karabiner'
 import { cn } from '../lib/utils'
@@ -14,16 +14,27 @@ import { ProfileTabs } from './ProfileTabs'
 
 type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'history'
 
+const KEYBOARD_LAYOUT_STORAGE_KEY = 'sling-keyboard-layout'
+
 export function ConfigurationEditor() {
   const { config, reset, selectedProfileIndex, selectedRuleIndex, selectRule, addHistoryEntry } =
     useKarabinerStore()
   const [activeTab, setActiveTab] = useState<TabType>('simple')
   const [isEditorOpen, setIsEditorOpen] = useState(false)
   const [isComplexEditorOpen, setIsComplexEditorOpen] = useState(false)
-  const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>('us-ansi')
+  const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>(() => {
+    // ローカルストレージから初期値を取得
+    const savedLayout = localStorage.getItem(KEYBOARD_LAYOUT_STORAGE_KEY)
+    return (savedLayout as LayoutType) || 'us-ansi'
+  })
   const [editingModification, setEditingModification] = useState<SimpleModification | null>(null)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+
+  // キーボードレイアウトが変更されたらローカルストレージに保存
+  useEffect(() => {
+    localStorage.setItem(KEYBOARD_LAYOUT_STORAGE_KEY, keyboardLayout)
+  }, [keyboardLayout])
 
   if (!config) return null
 
