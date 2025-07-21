@@ -3,25 +3,49 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 export function DarkModeToggle() {
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(() => {
+    // Check both localStorage and current DOM state
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme) {
+      return savedTheme === 'dark'
+    }
+    return document.documentElement.classList.contains('dark')
+  })
 
   useEffect(() => {
-    // Check initial dark mode state
-    const isDarkMode = document.documentElement.classList.contains('dark')
-    setIsDark(isDarkMode)
+    // Sync state with DOM on mount and when dark mode changes externally
+    const checkDarkMode = () => {
+      const isDarkMode = document.documentElement.classList.contains('dark')
+      setIsDark(isDarkMode)
+    }
+
+    // Check initial state
+    checkDarkMode()
+
+    // Watch for external changes (e.g., system preference changes)
+    const observer = new MutationObserver(checkDarkMode)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    return () => observer.disconnect()
   }, [])
 
   const toggleDarkMode = () => {
     const newIsDark = !isDark
-    setIsDark(newIsDark)
 
     if (newIsDark) {
+      document.documentElement.classList.remove('light')
       document.documentElement.classList.add('dark')
       localStorage.setItem('theme', 'dark')
     } else {
       document.documentElement.classList.remove('dark')
+      document.documentElement.classList.add('light')
       localStorage.setItem('theme', 'light')
     }
+
+    setIsDark(newIsDark)
   }
 
   return (

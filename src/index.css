@@ -1,3 +1,144 @@
 @import "tailwindcss";
 
+/* Light mode styles (default) */
+:root,
+html.light {
+  color-scheme: light;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #4b5563;
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+
+  /* Mapped key colors for light mode */
+  --mapped-bg: #f0fdf4;
+  --mapped-border: #059669;
+  --mapped-text: #065f46;
+  --mapped-text-secondary: #047857;
+}
+
+/* Dark mode styles */
+html.dark {
+  color-scheme: dark;
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  --text-primary: #ffffff;
+  --text-secondary: #e5e7eb;
+  --text-muted: #9ca3af;
+  --border-primary: #374151;
+  --border-secondary: #4b5563;
+
+  /* Mapped key colors for dark mode */
+  --mapped-bg: rgba(34, 197, 94, 0.3);
+  --mapped-border: #10b981;
+  --mapped-text: #86efac;
+  --mapped-text-secondary: #34d399;
+}
+
+/* Apply CSS variables to common classes */
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+.text-primary {
+  color: var(--text-primary);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-muted {
+  color: var(--text-muted);
+}
+.border-primary {
+  border-color: var(--border-primary);
+}
+.border-secondary {
+  border-color: var(--border-secondary);
+}
+
+/* Mapped key styles */
+.mapped-key {
+  background-color: var(--mapped-bg);
+  border-color: var(--mapped-border);
+  border-width: 2px;
+}
+.mapped-text {
+  color: var(--mapped-text);
+}
+.mapped-text-secondary {
+  color: var(--mapped-text-secondary);
+}
+
+/* Override Tailwind's dark mode classes to use CSS variables */
+html.dark .dark\:bg-gray-900 {
+  background-color: var(--bg-primary);
+}
+html.dark .dark\:bg-gray-800 {
+  background-color: var(--bg-secondary);
+}
+html.dark .dark\:bg-gray-700 {
+  background-color: var(--bg-tertiary);
+}
+html.dark .dark\:text-white {
+  color: var(--text-primary);
+}
+html.dark .dark\:text-gray-200 {
+  color: var(--text-secondary);
+}
+html.dark .dark\:text-gray-400 {
+  color: var(--text-muted);
+}
+html.dark .dark\:border-gray-700 {
+  border-color: var(--border-primary);
+}
+html.dark .dark\:border-gray-600 {
+  border-color: var(--border-secondary);
+}
+
+/* Light mode overrides */
+html.light .bg-gray-50 {
+  background-color: var(--bg-secondary);
+}
+html.light .bg-white {
+  background-color: var(--bg-primary);
+}
+html.light .bg-gray-100 {
+  background-color: var(--bg-tertiary);
+}
+html.light .text-gray-900 {
+  color: var(--text-primary);
+}
+html.light .text-gray-700 {
+  color: var(--text-secondary);
+}
+html.light .text-gray-600 {
+  color: var(--text-muted);
+}
+html.light .border-gray-200 {
+  border-color: var(--border-primary);
+}
+html.light .border-gray-300 {
+  border-color: var(--border-secondary);
+}
+
 /* Additional styles if needed */
+
+/* Improve native tooltip visibility */
+[title] {
+  position: relative;
+}
+
+/* Better hover states for light mode */
+html.light .hover\:bg-gray-200:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}

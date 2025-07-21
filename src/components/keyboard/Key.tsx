@@ -76,7 +76,7 @@ export function Key({
         isSelected
           ? 'border-blue-500 bg-blue-100 dark:bg-blue-900/30 shadow-lg'
           : isMapped
-            ? 'border-green-500 bg-green-100 dark:bg-green-900/30 shadow-md'
+            ? 'mapped-key shadow-md'
             : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800',
         !disabled && !isSelected && 'hover:border-gray-400 dark:hover:border-gray-500'
       )}
@@ -97,7 +97,7 @@ export function Key({
       {/* Main label - show mapped key if mapped, otherwise show original */}
       <div className="flex flex-col items-center">
         {isMapped && toModifiers && toModifiers.length > 0 && (
-          <span className="text-xs text-green-600 dark:text-green-400 mb-0.5">
+          <span className="text-xs mapped-text-secondary mb-0.5">
             {toModifiers.map(m => getModifierSymbol(m)).join('')}
           </span>
         )}
@@ -107,7 +107,7 @@ export function Key({
             isSelected
               ? 'text-blue-700 dark:text-blue-300'
               : isMapped
-                ? 'text-green-700 dark:text-green-300'
+                ? 'mapped-text'
                 : 'text-gray-700 dark:text-gray-300',
             (isMapped && mappedTo ? mappedTo.length : label.length) > 5 && 'text-xs'
           )}
