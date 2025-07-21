@@ -2,6 +2,7 @@
   "name": "sling",
   "version": "1.0.0",
   "description": "key mapping web gui for Karabiner-Elements",
+  "homepage": "https://shiroino.github.io/Sling/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,6 +21,7 @@
     "@biomejs/biome": "^2.1.2",
     "@radix-ui/react-slot": "^1.2.3",
     "@types/file-saver": "^2.0.7",
+    "@types/node": "^24.0.15",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.7.0",
