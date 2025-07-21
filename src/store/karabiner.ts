@@ -62,6 +62,10 @@ export const useKarabinerStore = create<KarabinerState>()(
           set(state => {
             // Add import history entry
             if (config) {
+              // Find the default profile (the one with selected: true)
+              const defaultProfileIndex = config.profiles.findIndex(profile => profile.selected === true)
+              const selectedProfileIndex = defaultProfileIndex >= 0 ? defaultProfileIndex : 0
+
               const newHistory: ImportExportHistory = {
                 id: crypto.randomUUID(),
                 type: 'import',
@@ -75,7 +79,7 @@ export const useKarabinerStore = create<KarabinerState>()(
               }
               return {
                 config,
-                selectedProfileIndex: 0,
+                selectedProfileIndex,
                 selectedRuleIndex: null,
                 error: null,
                 isDirty: false,
