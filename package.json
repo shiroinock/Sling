@@ -2,7 +2,7 @@
   "name": "sling",
   "version": "1.0.0",
   "description": "key mapping web gui for Karabiner-Elements",
-  "homepage": "https://shiroino.github.io/Sling/",
+  "homepage": "https://shiroinock.github.io/Sling/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,9 +14,16 @@
     "check": "biome check .",
     "check:fix": "biome check --write ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["karabiner-elements", "keyboard", "macos", "keymapping", "customization"],
+  "author": "shiroinock",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shiroinock/Sling.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shiroinock/Sling/issues"
+  },
   "devDependencies": {
     "@biomejs/biome": "^2.1.2",
     "@radix-ui/react-slot": "^1.2.3",
