@@ -106,6 +106,21 @@ export function ComplexModificationEditor({
             />
           </div>
 
+          <div>
+            <Label htmlFor="group" className="text-gray-700 dark:text-gray-200">
+              Group (Optional)
+            </Label>
+            <Input
+              id="group"
+              value={rule.group || ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setRule({ ...rule, group: e.target.value || undefined })
+              }
+              placeholder="e.g., Navigation, Productivity, Development"
+              className="mt-1 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+            />
+          </div>
+
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">Manipulators</h3>

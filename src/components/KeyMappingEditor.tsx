@@ -1,5 +1,6 @@
 import { ArrowRight, Keyboard, Trash2, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { LayoutType } from '@/data/keyboardLayouts'
 import { cn } from '@/lib/utils'
 import { useKarabinerStore } from '@/store/karabiner'
@@ -7,7 +8,6 @@ import type { SimpleModification } from '@/types/karabiner'
 import { VisualKeyboard } from './keyboard/VisualKeyboard'
 import { ModifierKeySelector } from './ModifierKeySelector'
 import { SpecialKeySelector } from './SpecialKeySelector'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface KeyMappingEditorProps {
   isOpen: boolean
@@ -67,7 +67,7 @@ export function KeyMappingEditor({
       to: [
         {
           // Check if it's a consumer key (media key, etc.)
-          ...(toKey.startsWith('consumer_') 
+          ...(toKey.startsWith('consumer_')
             ? { consumer_key_code: toKey.replace('consumer_', '') }
             : { key_code: toKey }),
           ...(toModifiers.length > 0 && { modifiers: toModifiers })
@@ -177,7 +177,9 @@ export function KeyMappingEditor({
                     {toModifiers.join(' + ')} +
                   </span>
                 )}
-                {toKey.startsWith('consumer_') ? toKey.replace('consumer_', '') : toKey || 'Select key'}
+                {toKey.startsWith('consumer_')
+                  ? toKey.replace('consumer_', '')
+                  : toKey || 'Select key'}
               </div>
             </div>
           </div>
@@ -188,7 +190,7 @@ export function KeyMappingEditor({
               <TabsTrigger value="keyboard">キーボード</TabsTrigger>
               <TabsTrigger value="special">特殊キー</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="keyboard" className="mt-4">
               {/* Visual keyboard */}
               <div className="flex justify-center">
@@ -201,7 +203,7 @@ export function KeyMappingEditor({
                 />
               </div>
             </TabsContent>
-            
+
             <TabsContent value="special" className="mt-4">
               {/* Special keys selector */}
               <SpecialKeySelector onKeySelect={handleToKeySelect} />

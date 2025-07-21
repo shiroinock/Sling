@@ -28,6 +28,8 @@ interface KeyProps {
   onMouseEnter?: (keyCode: string) => void
   onMouseLeave?: () => void
   disabled?: boolean
+  dimmed?: boolean
+  highlighted?: boolean
 }
 
 export function Key({
@@ -39,7 +41,9 @@ export function Key({
   onClick,
   onMouseEnter,
   onMouseLeave,
-  disabled
+  disabled,
+  dimmed,
+  highlighted
 }: KeyProps) {
   const { keyCode, label, shiftLabel, width = 1, height = 1 } = keyData
 
@@ -67,6 +71,8 @@ export function Key({
         'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
         disabled && 'cursor-not-allowed opacity-50',
         !disabled && onClick && 'cursor-pointer',
+        dimmed && 'opacity-30',
+        highlighted && 'ring-2 ring-yellow-400 dark:ring-yellow-500 ring-offset-2',
         isSelected
           ? 'border-blue-500 bg-blue-100 dark:bg-blue-900/30 shadow-lg'
           : isMapped

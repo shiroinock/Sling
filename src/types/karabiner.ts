@@ -141,6 +141,8 @@ export interface ComplexModificationParameters {
 export interface Rule {
   description?: string
   manipulators: Manipulator[]
+  enabled?: boolean
+  group?: string
 }
 
 export interface Manipulator {

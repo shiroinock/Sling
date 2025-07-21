@@ -1,6 +1,7 @@
 import { AlertCircle } from 'lucide-react'
 import { useState } from 'react'
 import { ConfigurationEditor } from './components/ConfigurationEditor'
+import { DarkModeToggle } from './components/DarkModeToggle'
 import { FileUpload } from './components/FileUpload'
 import { useKarabinerStore } from './store/karabiner'
 
@@ -19,7 +20,10 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
+        <header className="relative text-center mb-12">
+          <div className="absolute right-0 top-0">
+            <DarkModeToggle />
+          </div>
           <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">Sling</h1>
           <p className="text-gray-600 dark:text-gray-400">Karabiner-Elements Key Mapping GUI</p>
         </header>

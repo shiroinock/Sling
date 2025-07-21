@@ -37,7 +37,10 @@ export function SimpleModificationsList() {
             </code>
             <ArrowRight className="w-4 h-4 text-gray-400" />
             <code className="px-3 py-1 bg-white dark:bg-gray-800 rounded-md font-mono text-sm">
-              {mod.to[0]?.key_code || mod.to[0]?.consumer_key_code || mod.to[0]?.pointing_button || 'unknown'}
+              {mod.to[0]?.key_code ||
+                mod.to[0]?.consumer_key_code ||
+                mod.to[0]?.pointing_button ||
+                'unknown'}
             </code>
           </div>
           <div className="flex items-center gap-2">

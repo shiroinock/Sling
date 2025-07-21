@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver'
-import { Download, FileUp, Plus } from 'lucide-react'
+import { Download, FileUp, Plus, Search } from 'lucide-react'
 import { useState } from 'react'
 import type { LayoutType } from '@/data/keyboardLayouts'
 import type { SimpleModification } from '@/types/karabiner'
@@ -7,20 +7,23 @@ import { cn } from '../lib/utils'
 import { useKarabinerStore } from '../store/karabiner'
 import { ComplexModificationEditor } from './ComplexModificationEditor'
 import { ComplexModificationsList } from './ComplexModificationsList'
+import { ImportExportHistory } from './ImportExportHistory'
 import { KeyMappingEditor } from './KeyMappingEditor'
 import { VisualKeyboard } from './keyboard/VisualKeyboard'
 import { ProfileTabs } from './ProfileTabs'
 
-type TabType = 'simple' | 'complex' | 'function_keys' | 'devices'
+type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'history'
 
 export function ConfigurationEditor() {
-  const { config, reset, selectedProfileIndex, selectedRuleIndex, selectRule } = useKarabinerStore()
+  const { config, reset, selectedProfileIndex, selectedRuleIndex, selectRule, addHistoryEntry } =
+    useKarabinerStore()
   const [activeTab, setActiveTab] = useState<TabType>('simple')
   const [isEditorOpen, setIsEditorOpen] = useState(false)
   const [isComplexEditorOpen, setIsComplexEditorOpen] = useState(false)
   const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>('us-ansi')
   const [editingModification, setEditingModification] = useState<SimpleModification | null>(null)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
   if (!config) return null
 
@@ -28,7 +31,19 @@ export function ConfigurationEditor() {
     const blob = new Blob([JSON.stringify(config, null, 2)], {
       type: 'application/json'
     })
-    saveAs(blob, 'karabiner.json')
+    const fileName = `karabiner-${new Date().toISOString().split('T')[0]}.json`
+    saveAs(blob, fileName)
+
+    // Add export history entry
+    addHistoryEntry({
+      type: 'export',
+      fileName,
+      profileCount: config?.profiles.length,
+      ruleCount: config?.profiles.reduce(
+        (acc, profile) => acc + (profile.complex_modifications?.rules?.length || 0),
+        0
+      )
+    })
   }
 
   const handleKeyClick = (keyCode: string) => {
@@ -67,7 +82,8 @@ export function ConfigurationEditor() {
     { id: 'simple', label: 'Simple Modifications' },
     { id: 'complex', label: 'Complex Modifications' },
     { id: 'function_keys', label: 'Function Keys' },
-    { id: 'devices', label: 'Devices' }
+    { id: 'devices', label: 'Devices' },
+    { id: 'history', label: 'History' }
   ]
 
   return (
@@ -130,6 +146,16 @@ export function ConfigurationEditor() {
                     Simple Modifications
                   </h3>
                   <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search mappings..."
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                        className="pl-10 pr-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                      />
+                    </div>
                     <select
                       value={keyboardLayout}
                       onChange={e => setKeyboardLayout(e.target.value as LayoutType)}
@@ -161,6 +187,7 @@ export function ConfigurationEditor() {
                       }
                       mode="view"
                       onKeyClick={handleKeyClick}
+                      searchTerm={searchTerm}
                     />
                   </div>
 
@@ -194,16 +221,31 @@ export function ConfigurationEditor() {
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                     Complex Modifications
                   </h3>
-                  <button
-                    type="button"
-                    onClick={() => setIsComplexEditorOpen(true)}
-                    className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                  >
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Rule
-                  </button>
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search rules..."
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                        className="pl-10 pr-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsComplexEditorOpen(true)}
+                      className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add Rule
+                    </button>
+                  </div>
                 </div>
-                <ComplexModificationsList onEditRule={handleEditComplexRule} />
+                <ComplexModificationsList
+                  onEditRule={handleEditComplexRule}
+                  searchTerm={searchTerm}
+                />
               </div>
             )}
 
@@ -218,6 +260,8 @@ export function ConfigurationEditor() {
                 <p>Device-specific settings coming soon...</p>
               </div>
             )}
+
+            {activeTab === 'history' && <ImportExportHistory />}
           </div>
         </div>
       </div>

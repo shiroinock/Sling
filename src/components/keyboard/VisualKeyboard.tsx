@@ -15,6 +15,7 @@ interface VisualKeyboardProps {
   onKeyClick?: (keyCode: string) => void
   mode?: 'from' | 'to' | 'view'
   className?: string
+  searchTerm?: string
 }
 
 export function VisualKeyboard({
@@ -26,7 +27,8 @@ export function VisualKeyboard({
   onToKeySelect,
   onKeyClick,
   mode = 'view',
-  className
+  className,
+  searchTerm = ''
 }: VisualKeyboardProps) {
   const keyboardLayout = getLayout(layout)
   const [hoveredKey, setHoveredKey] = useState<string | null>(null)
@@ -101,6 +103,16 @@ export function VisualKeyboard({
                 const mappingInfo = mappingsMap.get(keyData.keyCode)
                 const mappedTo = mappingInfo?.toKey
 
+                // Search filtering
+                const matchesSearch = searchTerm
+                  ? keyData.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    keyData.keyCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (mappedTo ? mappedTo.toLowerCase().includes(searchTerm.toLowerCase()) : false)
+                  : true
+                const isSearchActive = searchTerm.length > 0
+                const shouldHighlight =
+                  isSearchActive && matchesSearch && (isMapped || mode !== 'view')
+
                 let isSelected = false
                 if (mode === 'from') {
                   isSelected = isFromKey
@@ -128,6 +140,8 @@ export function VisualKeyboard({
                       onMouseEnter={setHoveredKey}
                       onMouseLeave={() => setHoveredKey(null)}
                       disabled={mode === 'view' && !onKeyClick}
+                      dimmed={isSearchActive && !matchesSearch}
+                      highlighted={shouldHighlight}
                     />
 
                     {/* Tooltip */}

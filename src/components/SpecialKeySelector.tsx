@@ -1,23 +1,21 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Play, 
-  Pause, 
-  SkipForward, 
-  SkipBack, 
-  Volume2, 
-  VolumeX,
+import {
   MonitorSpeaker,
-  Sun,
   Moon,
-  Power
-} from 'lucide-react';
-import { CONSUMER_KEY_CODES } from '@/types/karabiner';
+  Play,
+  Power,
+  SkipBack,
+  SkipForward,
+  Sun,
+  Volume2,
+  VolumeX
+} from 'lucide-react'
+import type React from 'react'
+import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface SpecialKeySelectorProps {
-  onKeySelect: (keyCode: string) => void;
+  onKeySelect: (keyCode: string) => void
 }
 
 // アイコンマッピング
@@ -32,7 +30,7 @@ const iconMap: Record<string, React.ReactNode> = {
   display_brightness_down: <Moon className="h-4 w-4" />,
   power: <Power className="h-4 w-4" />,
   eject: <MonitorSpeaker className="h-4 w-4" />
-};
+}
 
 // キーのカテゴリ分け
 const keyCategories = {
@@ -82,10 +80,26 @@ const keyCategories = {
     keys: [
       { code: 'display_brightness_up', label: '画面の明るさを上げる', isConsumer: true },
       { code: 'display_brightness_down', label: '画面の明るさを下げる', isConsumer: true },
-      { code: 'apple_display_brightness_up', label: 'Apple 画面の明るさを上げる', isConsumer: true },
-      { code: 'apple_display_brightness_down', label: 'Apple 画面の明るさを下げる', isConsumer: true },
-      { code: 'apple_top_case_display_brightness_up', label: 'Touch Bar 明るさを上げる', isConsumer: true },
-      { code: 'apple_top_case_display_brightness_down', label: 'Touch Bar 明るさを下げる', isConsumer: true }
+      {
+        code: 'apple_display_brightness_up',
+        label: 'Apple 画面の明るさを上げる',
+        isConsumer: true
+      },
+      {
+        code: 'apple_display_brightness_down',
+        label: 'Apple 画面の明るさを下げる',
+        isConsumer: true
+      },
+      {
+        code: 'apple_top_case_display_brightness_up',
+        label: 'Touch Bar 明るさを上げる',
+        isConsumer: true
+      },
+      {
+        code: 'apple_top_case_display_brightness_down',
+        label: 'Touch Bar 明るさを下げる',
+        isConsumer: true
+      }
     ]
   },
   systemKeys: {
@@ -136,18 +150,18 @@ const keyCategories = {
       { code: 'keypad_comma', label: 'Keypad ,' }
     ]
   }
-};
+}
 
 export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySelect }) => {
   const handleKeyClick = (keyCode: string, isConsumer = false) => {
     // Consumer key codesは別の形式で処理が必要
     if (isConsumer) {
       // KeyMappingEditorで処理するために特別なプレフィックスを付ける
-      onKeySelect(`consumer_${keyCode}`);
+      onKeySelect(`consumer_${keyCode}`)
     } else {
-      onKeySelect(keyCode);
+      onKeySelect(keyCode)
     }
-  };
+  }
 
   return (
     <div className="space-y-4">
@@ -164,7 +178,7 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
         <TabsContent value="function" className="mt-4">
           <ScrollArea className="h-[300px] w-full rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-4 gap-2">
-              {keyCategories.functionKeys.keys.map((key) => (
+              {keyCategories.functionKeys.keys.map(key => (
                 <Button
                   key={key.code}
                   variant="outline"
@@ -182,7 +196,7 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
         <TabsContent value="media" className="mt-4">
           <ScrollArea className="h-[300px] w-full rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-2 gap-2">
-              {keyCategories.mediaKeys.keys.map((key) => (
+              {keyCategories.mediaKeys.keys.map(key => (
                 <Button
                   key={key.code}
                   variant="outline"
@@ -201,7 +215,7 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
         <TabsContent value="display" className="mt-4">
           <ScrollArea className="h-[300px] w-full rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-1 gap-2">
-              {keyCategories.displayKeys.keys.map((key) => (
+              {keyCategories.displayKeys.keys.map(key => (
                 <Button
                   key={key.code}
                   variant="outline"
@@ -220,7 +234,7 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
         <TabsContent value="system" className="mt-4">
           <ScrollArea className="h-[300px] w-full rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-2 gap-2">
-              {keyCategories.systemKeys.keys.map((key) => (
+              {keyCategories.systemKeys.keys.map(key => (
                 <Button
                   key={key.code}
                   variant="outline"
@@ -239,7 +253,7 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
         <TabsContent value="navigation" className="mt-4">
           <ScrollArea className="h-[300px] w-full rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-2 gap-2">
-              {keyCategories.navigationKeys.keys.map((key) => (
+              {keyCategories.navigationKeys.keys.map(key => (
                 <Button
                   key={key.code}
                   variant="outline"
@@ -257,7 +271,7 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
         <TabsContent value="numpad" className="mt-4">
           <ScrollArea className="h-[300px] w-full rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-3 gap-2">
-              {keyCategories.numpadKeys.keys.map((key) => (
+              {keyCategories.numpadKeys.keys.map(key => (
                 <Button
                   key={key.code}
                   variant="outline"
@@ -273,5 +287,5 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
         </TabsContent>
       </Tabs>
     </div>
-  );
-};
+  )
+}
