@@ -44,7 +44,7 @@
     "lucide-react": "^0.525.0",
     "postcss": "^8.5.6",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3",
     "vite": "^7.0.5"
   },
@@ -54,6 +54,7 @@
     "@radix-ui/react-scroll-area": "^1.2.9",
     "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-tabs": "^1.1.12",
+    "@tailwindcss/postcss": "^4.1.11",
     "file-saver": "^2.0.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
