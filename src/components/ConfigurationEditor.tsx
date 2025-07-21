@@ -117,7 +117,7 @@ export function ConfigurationEditor() {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-gray-100 rounded-lg transition-colors"
               >
                 <FileUp className="w-4 h-4 mr-2" />
                 Load New
@@ -207,7 +207,7 @@ export function ConfigurationEditor() {
                     <div className="flex justify-center">
                       <div className="inline-flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
                         <div className="flex items-center gap-2">
-                          <div className="w-12 h-8 rounded border-2 border-green-500 bg-green-100 dark:bg-green-900/30" />
+                          <div className="w-12 h-8 rounded mapped-key shadow-md" />
                           <span>Mapped key</span>
                         </div>
                         <div className="flex items-center gap-2">
