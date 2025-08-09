@@ -286,6 +286,7 @@ export function ConfigurationEditor() {
         onClose={handleEditorClose}
         editingModification={editingModification}
         editingIndex={editingIndex}
+        currentLayout={keyboardLayout}
       />
 
       {/* Complex Modification Editor Modal */}

@@ -14,13 +14,15 @@ interface KeyMappingEditorProps {
   onClose: () => void
   editingModification?: SimpleModification | null
   editingIndex?: number | null
+  currentLayout?: LayoutType
 }
 
 export function KeyMappingEditor({
   isOpen,
   onClose,
   editingModification,
-  editingIndex
+  editingIndex,
+  currentLayout = 'us-ansi'
 }: KeyMappingEditorProps) {
   const { addSimpleModification, updateSimpleModification, deleteSimpleModification } =
     useKarabinerStore()
@@ -29,10 +31,14 @@ export function KeyMappingEditor({
   const [toKey, setToKey] = useState<string>('')
   const [fromModifiers, setFromModifiers] = useState<string[]>([])
   const [toModifiers, setToModifiers] = useState<string[]>([])
-  const [layout, setLayout] = useState<LayoutType>('us-ansi')
+  const [layout, setLayout] = useState<LayoutType>(currentLayout)
   const [showModifiers, setShowModifiers] = useState(false)
 
-  // Update state when editingModification changes
+  // Update state when editingModification or currentLayout changes
+  useEffect(() => {
+    setLayout(currentLayout)
+  }, [currentLayout])
+
   useEffect(() => {
     if (isOpen && editingModification) {
       setFromKey(editingModification.from.key_code || '')
