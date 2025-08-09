@@ -60,6 +60,6 @@
     "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.8",
     "zod": "^4.0.14",
-    "zustand": "^5.0.6"
+    "zustand": "^5.0.7"
   }
 }
