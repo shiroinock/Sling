@@ -6,6 +6,9 @@ export interface KeyData {
   height?: number // 1 = 1u (standard key height)
   x?: number // X offset in units
   y?: number // Y offset in units
+  shape?: 'normal' | 'iso-enter' // Special shape for ISO/JIS Enter key
+  upperWidth?: number // Upper width for ISO Enter (in units)
+  lowerWidth?: number // Lower width for ISO Enter (in units)
 }
 
 export interface KeyboardRow {
@@ -157,7 +160,17 @@ export const jisLayout: KeyboardLayout = {
         { keyCode: 'p', label: 'P' },
         { keyCode: 'open_bracket', label: '@', shiftLabel: '`' },
         { keyCode: 'close_bracket', label: '[', shiftLabel: '{' },
-        { keyCode: 'return_or_enter', label: 'Enter', width: 1.5, height: 2, x: 13.5, y: 0 }
+        { 
+          keyCode: 'return_or_enter', 
+          label: 'Enter', 
+          width: 1.5, 
+          height: 2, 
+          x: 13.5, 
+          y: 0,
+          shape: 'iso-enter',
+          upperWidth: 1.5,
+          lowerWidth: 1.25
+        }
       ]
     },
     // Row 3 - Caps Lock and ASDFGH
@@ -400,7 +413,17 @@ export const macbookJisLayout: KeyboardLayout = {
         { keyCode: 'p', label: 'P' },
         { keyCode: 'open_bracket', label: '@', shiftLabel: '`' },
         { keyCode: 'close_bracket', label: '[', shiftLabel: '{' },
-        { keyCode: 'return_or_enter', label: 'return', width: 1.5, height: 2, x: 13.5, y: 0 }
+        { 
+          keyCode: 'return_or_enter', 
+          label: 'return', 
+          width: 1.5, 
+          height: 2, 
+          x: 13.5, 
+          y: 0,
+          shape: 'iso-enter',
+          upperWidth: 1.5,
+          lowerWidth: 1.25
+        }
       ]
     },
     // Row 4 - Caps Lock and ASDFGH (JIS specific)
@@ -463,13 +486,52 @@ export const macbookJisLayout: KeyboardLayout = {
   ]
 }
 
-export type LayoutType = 'us-ansi' | 'jis' | 'macbook-us' | 'macbook-jis'
+// JIS Enter key test layout - エンターキーの外観確認用
+export const jisEnterTestLayout: KeyboardLayout = {
+  name: 'JIS Enter Test',
+  width: 10,
+  height: 3,
+  rows: [
+    // Row 1 - 上の行のキー（エンターキーの上部分）
+    {
+      keys: [
+        { keyCode: 'p', label: 'P', x: 2 },
+        { keyCode: 'open_bracket', label: '@', shiftLabel: '`' },
+        { keyCode: 'close_bracket', label: '[', shiftLabel: '{' },
+        { 
+          keyCode: 'return_or_enter', 
+          label: 'Enter', 
+          width: 1.5, 
+          height: 2, 
+          x: 5, 
+          y: 0,
+          shape: 'iso-enter',
+          upperWidth: 1.5,
+          lowerWidth: 1.25
+        }
+      ]
+    },
+    // Row 2 - 下の行のキー（エンターキーの下部分）
+    {
+      y: 1,
+      keys: [
+        { keyCode: 'l', label: 'L', x: 2 },
+        { keyCode: 'semicolon', label: ';', shiftLabel: '+' },
+        { keyCode: 'quote', label: ':', shiftLabel: '*' },
+        { keyCode: 'backslash', label: ']', shiftLabel: '}' }
+      ]
+    }
+  ]
+}
+
+export type LayoutType = 'us-ansi' | 'jis' | 'macbook-us' | 'macbook-jis' | 'jis-enter-test'
 
 export const layouts: Record<LayoutType, KeyboardLayout> = {
   'us-ansi': usAnsiLayout,
   jis: jisLayout,
   'macbook-us': macbookUsLayout,
-  'macbook-jis': macbookJisLayout
+  'macbook-jis': macbookJisLayout,
+  'jis-enter-test': jisEnterTestLayout
 }
 
 // Helper function to get layout by type

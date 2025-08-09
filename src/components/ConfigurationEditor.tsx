@@ -176,6 +176,7 @@ export function ConfigurationEditor() {
                       <option value="jis">JIS</option>
                       <option value="macbook-us">MacBook US</option>
                       <option value="macbook-jis">MacBook JIS</option>
+                      <option value="jis-enter-test">JIS Enter Test</option>
                     </select>
                     <button
                       type="button"
