@@ -216,7 +216,7 @@ export const jisLayout: KeyboardLayout = {
         { keyCode: 'left_option', label: 'Option', width: 1 },
         { keyCode: 'left_command', label: 'Cmd', width: 1.25 },
         { keyCode: 'japanese_eisuu', label: '英数', width: 1 },
-        { keyCode: 'spacebar', label: 'Space', width: 4.5 },
+        { keyCode: 'spacebar', label: 'Space', width: 4 },
         { keyCode: 'japanese_kana', label: 'かな', width: 1 },
         { keyCode: 'right_command', label: 'Cmd', width: 1.25 },
         { keyCode: 'right_option', label: 'Option', width: 1 },
@@ -237,25 +237,25 @@ export const macbookUsLayout: KeyboardLayout = {
     // Row 1 - Function keys and special keys
     {
       keys: [
-        { keyCode: 'escape', label: 'esc' },
-        { keyCode: 'f1', label: 'F1' },
-        { keyCode: 'f2', label: 'F2' },
-        { keyCode: 'f3', label: 'F3' },
-        { keyCode: 'f4', label: 'F4' },
-        { keyCode: 'f5', label: 'F5' },
-        { keyCode: 'f6', label: 'F6' },
-        { keyCode: 'f7', label: 'F7' },
-        { keyCode: 'f8', label: 'F8' },
-        { keyCode: 'f9', label: 'F9' },
-        { keyCode: 'f10', label: 'F10' },
-        { keyCode: 'f11', label: 'F11' },
-        { keyCode: 'f12', label: 'F12' },
-        { keyCode: 'power', label: '⏻', x: 14 }
+        { keyCode: 'escape', label: 'esc', width: 1.5 },
+        { keyCode: 'f1', label: 'F1', x: 1.5 },
+        { keyCode: 'f2', label: 'F2', x: 2.5 },
+        { keyCode: 'f3', label: 'F3', x: 3.5 },
+        { keyCode: 'f4', label: 'F4', x: 4.5 },
+        { keyCode: 'f5', label: 'F5', x: 5.5 },
+        { keyCode: 'f6', label: 'F6', x: 6.5 },
+        { keyCode: 'f7', label: 'F7', x: 7.5 },
+        { keyCode: 'f8', label: 'F8', x: 8.5 },
+        { keyCode: 'f9', label: 'F9', x: 9.5 },
+        { keyCode: 'f10', label: 'F10', x: 10.5 },
+        { keyCode: 'f11', label: 'F11', x: 11.5 },
+        { keyCode: 'f12', label: 'F12', x: 12.5 },
+        { keyCode: 'power', label: '⏻', x: 13.5 }
       ]
     },
     // Row 2 - Numbers and symbols
     {
-      y: 1.25,
+      y: 1,
       keys: [
         { keyCode: 'grave_accent_and_tilde', label: '`', shiftLabel: '~' },
         { keyCode: '1', label: '1', shiftLabel: '!' },
@@ -270,12 +270,12 @@ export const macbookUsLayout: KeyboardLayout = {
         { keyCode: '0', label: '0', shiftLabel: ')' },
         { keyCode: 'hyphen', label: '-', shiftLabel: '_' },
         { keyCode: 'equal_sign', label: '=', shiftLabel: '+' },
-        { keyCode: 'delete_or_backspace', label: 'delete', width: 2 }
+        { keyCode: 'delete_or_backspace', label: 'delete', width: 1.5 }
       ]
     },
     // Row 3 - Tab and QWERTY
     {
-      y: 2.25,
+      y: 2,
       keys: [
         { keyCode: 'tab', label: 'tab', width: 1.5 },
         { keyCode: 'q', label: 'Q' },
@@ -290,12 +290,12 @@ export const macbookUsLayout: KeyboardLayout = {
         { keyCode: 'p', label: 'P' },
         { keyCode: 'open_bracket', label: '[', shiftLabel: '{' },
         { keyCode: 'close_bracket', label: ']', shiftLabel: '}' },
-        { keyCode: 'backslash', label: '\\', shiftLabel: '|', width: 1.5 }
+        { keyCode: 'backslash', label: '\\', shiftLabel: '|', width: 1 }
       ]
     },
     // Row 4 - Caps Lock and ASDFGH
     {
-      y: 3.25,
+      y: 3,
       keys: [
         { keyCode: 'caps_lock', label: 'caps lock', width: 1.75 },
         { keyCode: 'a', label: 'A' },
@@ -309,12 +309,12 @@ export const macbookUsLayout: KeyboardLayout = {
         { keyCode: 'l', label: 'L' },
         { keyCode: 'semicolon', label: ';', shiftLabel: ':' },
         { keyCode: 'quote', label: "'", shiftLabel: '"' },
-        { keyCode: 'return_or_enter', label: 'return', width: 2.25 }
+        { keyCode: 'return_or_enter', label: 'return', width: 1.75 }
       ]
     },
     // Row 5 - Shift and ZXCVB
     {
-      y: 4.25,
+      y: 4,
       keys: [
         { keyCode: 'left_shift', label: 'shift', width: 2.25 },
         { keyCode: 'z', label: 'Z' },
@@ -327,25 +327,30 @@ export const macbookUsLayout: KeyboardLayout = {
         { keyCode: 'comma', label: ',', shiftLabel: '<' },
         { keyCode: 'period', label: '.', shiftLabel: '>' },
         { keyCode: 'slash', label: '/', shiftLabel: '?' },
-        { keyCode: 'right_shift', label: 'shift', width: 2.75 }
+        { keyCode: 'right_shift', label: 'shift', width: 2.25 }
       ]
     },
-    // Row 6 - Bottom row with modifiers and arrow keys
+    // Row 6 - Bottom row with modifiers
     {
-      y: 5.25,
+      y: 5,
       keys: [
-        { keyCode: 'fn', label: 'fn' },
-        { keyCode: 'left_control', label: 'control' },
-        { keyCode: 'left_option', label: 'option' },
+        { keyCode: 'fn', label: 'fn', width: 1 },
+        { keyCode: 'left_control', label: 'control', width: 1 },
+        { keyCode: 'left_option', label: 'option', width: 1 },
         { keyCode: 'left_command', label: '⌘', width: 1.25 },
         { keyCode: 'spacebar', label: '', width: 5 },
         { keyCode: 'right_command', label: '⌘', width: 1.25 },
-        { keyCode: 'right_option', label: 'option' },
-        // Arrow keys
-        { keyCode: 'left_arrow', label: '←', x: 11 },
-        { keyCode: 'up_arrow', label: '↑', x: 12, y: 4.25, height: 0.5 },
-        { keyCode: 'down_arrow', label: '↓', x: 12, y: 5.25 },
-        { keyCode: 'right_arrow', label: '→', x: 13 }
+        { keyCode: 'right_option', label: 'option', width: 1 }
+      ]
+    },
+    // Arrow keys - all in the same row
+    {
+      y: 5,
+      keys: [
+        { keyCode: 'left_arrow', label: '←', x: 11.5, y: 0.5, height: 0.5 },
+        { keyCode: 'up_arrow', label: '↑', x: 12.5, height: 0.5 },
+        { keyCode: 'down_arrow', label: '↓', x: 12.5, y: 0.5, height: 0.5 },
+        { keyCode: 'right_arrow', label: '→', x: 13.5, y: 0.5, height: 0.5 }
       ]
     }
   ]
@@ -360,27 +365,27 @@ export const macbookJisLayout: KeyboardLayout = {
     // Row 1 - Function keys and special keys
     {
       keys: [
-        { keyCode: 'escape', label: 'esc' },
-        { keyCode: 'f1', label: 'F1' },
-        { keyCode: 'f2', label: 'F2' },
-        { keyCode: 'f3', label: 'F3' },
-        { keyCode: 'f4', label: 'F4' },
-        { keyCode: 'f5', label: 'F5' },
-        { keyCode: 'f6', label: 'F6' },
-        { keyCode: 'f7', label: 'F7' },
-        { keyCode: 'f8', label: 'F8' },
-        { keyCode: 'f9', label: 'F9' },
-        { keyCode: 'f10', label: 'F10' },
-        { keyCode: 'f11', label: 'F11' },
-        { keyCode: 'f12', label: 'F12' },
-        { keyCode: 'power', label: '⏻', x: 14 }
+        { keyCode: 'escape', label: 'esc', width: 1.5 },
+        { keyCode: 'f1', label: 'F1', x: 1.5 },
+        { keyCode: 'f2', label: 'F2', x: 2.5 },
+        { keyCode: 'f3', label: 'F3', x: 3.5 },
+        { keyCode: 'f4', label: 'F4', x: 4.5 },
+        { keyCode: 'f5', label: 'F5', x: 5.5 },
+        { keyCode: 'f6', label: 'F6', x: 6.5 },
+        { keyCode: 'f7', label: 'F7', x: 7.5 },
+        { keyCode: 'f8', label: 'F8', x: 8.5 },
+        { keyCode: 'f9', label: 'F9', x: 9.5 },
+        { keyCode: 'f10', label: 'F10', x: 10.5 },
+        { keyCode: 'f11', label: 'F11', x: 11.5 },
+        { keyCode: 'f12', label: 'F12', x: 12.5 },
+        { keyCode: 'power', label: '⏻', x: 13.5 }
       ]
     },
     // Row 2 - Numbers and symbols (JIS specific)
     {
-      y: 1.25,
+      y: 1,
       keys: [
-        { keyCode: '1', label: '1', shiftLabel: '!' },
+        { keyCode: '1', label: '1', shiftLabel: '!', width: 1.25 },
         { keyCode: '2', label: '2', shiftLabel: '"' },
         { keyCode: '3', label: '3', shiftLabel: '#' },
         { keyCode: '4', label: '4', shiftLabel: '$' },
@@ -393,14 +398,14 @@ export const macbookJisLayout: KeyboardLayout = {
         { keyCode: 'hyphen', label: '-', shiftLabel: '=' },
         { keyCode: 'equal_sign', label: '^', shiftLabel: '~' },
         { keyCode: 'international3', label: '¥', shiftLabel: '|' },
-        { keyCode: 'delete_or_backspace', label: 'delete', width: 1.5 }
+        { keyCode: 'delete_or_backspace', label: 'delete', width: 1.25 }
       ]
     },
     // Row 3 - Tab and QWERTY (JIS specific)
     {
-      y: 2.25,
+      y: 2,
       keys: [
-        { keyCode: 'tab', label: 'tab', width: 1.5 },
+        { keyCode: 'tab', label: 'tab', width: 1 },
         { keyCode: 'q', label: 'Q' },
         { keyCode: 'w', label: 'W' },
         { keyCode: 'e', label: 'E' },
@@ -418,7 +423,7 @@ export const macbookJisLayout: KeyboardLayout = {
           label: 'return',
           width: 1.5,
           height: 2,
-          x: 13.5,
+          x: 13,
           y: 0,
           shape: 'iso-enter',
           upperWidth: 1.5,
@@ -428,9 +433,9 @@ export const macbookJisLayout: KeyboardLayout = {
     },
     // Row 4 - Caps Lock and ASDFGH (JIS specific)
     {
-      y: 3.25,
+      y: 3,
       keys: [
-        { keyCode: 'caps_lock', label: 'caps lock', width: 1.75 },
+        { keyCode: 'left_control', label: 'control', width: 1.25 },
         { keyCode: 'a', label: 'A' },
         { keyCode: 's', label: 'S' },
         { keyCode: 'd', label: 'D' },
@@ -447,9 +452,9 @@ export const macbookJisLayout: KeyboardLayout = {
     },
     // Row 5 - Shift and ZXCVB (JIS specific)
     {
-      y: 4.25,
+      y: 4,
       keys: [
-        { keyCode: 'left_shift', label: 'shift', width: 2.25 },
+        { keyCode: 'left_shift', label: 'shift', width: 1.75 },
         { keyCode: 'z', label: 'Z' },
         { keyCode: 'x', label: 'X' },
         { keyCode: 'c', label: 'C' },
@@ -464,23 +469,28 @@ export const macbookJisLayout: KeyboardLayout = {
         { keyCode: 'right_shift', label: 'shift', width: 1.75 }
       ]
     },
-    // Row 6 - Bottom row with modifiers and arrow keys (JIS specific)
+    // Row 6 - Bottom row with modifiers (JIS specific)
     {
-      y: 5.25,
+      y: 5,
       keys: [
         { keyCode: 'fn', label: 'fn' },
-        { keyCode: 'left_control', label: 'control' },
         { keyCode: 'left_option', label: 'option' },
         { keyCode: 'left_command', label: '⌘', width: 1.25 },
-        { keyCode: 'japanese_eisuu', label: '英数' },
+        { keyCode: 'japanese_eisuu', label: '英数', width: 1.25 },
         { keyCode: 'spacebar', label: '', width: 3.5 },
-        { keyCode: 'japanese_kana', label: 'かな' },
+        { keyCode: 'japanese_kana', label: 'かな', width: 1.25 },
         { keyCode: 'right_command', label: '⌘', width: 1.25 },
-        // Arrow keys
-        { keyCode: 'left_arrow', label: '←', x: 11 },
-        { keyCode: 'up_arrow', label: '↑', x: 12, y: 4.25, height: 0.5 },
-        { keyCode: 'down_arrow', label: '↓', x: 12, y: 5.25 },
-        { keyCode: 'right_arrow', label: '→', x: 13 }
+        { keyCode: 'fn', label: 'fn', width: 1 }
+      ]
+    },
+    // Arrow keys - all in the same row
+    {
+      y: 5,
+      keys: [
+        { keyCode: 'left_arrow', label: '←', x: 11.5, y: 0.5, height: 0.5 },
+        { keyCode: 'up_arrow', label: '↑', x: 12.5, height: 0.5 },
+        { keyCode: 'down_arrow', label: '↓', x: 12.5, y: 0.5, height: 0.5 },
+        { keyCode: 'right_arrow', label: '→', x: 13.5, y: 0.5, height: 0.5 }
       ]
     }
   ]
