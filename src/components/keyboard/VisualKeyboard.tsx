@@ -16,6 +16,7 @@ interface VisualKeyboardProps {
   mode?: 'from' | 'to' | 'view'
   className?: string
   searchTerm?: string
+  keyPadding?: number // キー間のパディング（ピクセル単位、デフォルト1px）
 }
 
 export function VisualKeyboard({
@@ -28,7 +29,8 @@ export function VisualKeyboard({
   onKeyClick,
   mode = 'view',
   className,
-  searchTerm = ''
+  searchTerm = '',
+  keyPadding = 1
 }: VisualKeyboardProps) {
   const keyboardLayout = getLayout(layout)
   const [hoveredKey, setHoveredKey] = useState<string | null>(null)
@@ -93,9 +95,7 @@ export function VisualKeyboard({
                 const keyX =
                   keyData.x !== undefined
                     ? keyData.x * 60
-                    : row.keys
-                        .slice(0, keyIndex)
-                        .reduce((acc, k) => acc + (k.width || 1) * 60 + 4, 0) // 4px gap
+                    : row.keys.slice(0, keyIndex).reduce((acc, k) => acc + (k.width || 1) * 60, 0) // パディングは内部で処理
 
                 const isFromKey = selectedFromKey === keyData.keyCode
                 const isToKey = selectedToKey === keyData.keyCode
@@ -142,6 +142,7 @@ export function VisualKeyboard({
                       disabled={mode === 'view' && !onKeyClick}
                       dimmed={isSearchActive && !matchesSearch}
                       highlighted={shouldHighlight}
+                      padding={keyPadding}
                     />
 
                     {/* Tooltip */}

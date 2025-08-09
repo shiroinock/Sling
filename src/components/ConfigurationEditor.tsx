@@ -193,6 +193,7 @@ export function ConfigurationEditor() {
                 <div className="space-y-4">
                   <div className="flex justify-center">
                     <VisualKeyboard
+                      key={keyboardLayout} // レイアウト変更時に再マウント
                       layout={keyboardLayout}
                       simpleModifications={
                         config.profiles[selectedProfileIndex].simple_modifications || []
@@ -200,6 +201,7 @@ export function ConfigurationEditor() {
                       mode="view"
                       onKeyClick={handleKeyClick}
                       searchTerm={searchTerm}
+                      keyPadding={1}
                     />
                   </div>
 
@@ -284,6 +286,7 @@ export function ConfigurationEditor() {
         onClose={handleEditorClose}
         editingModification={editingModification}
         editingIndex={editingIndex}
+        currentLayout={keyboardLayout}
       />
 
       {/* Complex Modification Editor Modal */}
