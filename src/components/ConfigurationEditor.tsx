@@ -200,6 +200,7 @@ export function ConfigurationEditor() {
                       mode="view"
                       onKeyClick={handleKeyClick}
                       searchTerm={searchTerm}
+                      keyPadding={1}
                     />
                   </div>
 
