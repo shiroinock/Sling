@@ -71,10 +71,6 @@ export function Key({
     return () => observer.disconnect()
   }, [])
   
-  // Calculate clip-path for ISO Enter key (reverse L shape)
-  const notchRatio = shape === 'iso-enter' && upperWidth && lowerWidth
-    ? (lowerWidth / upperWidth) * 100
-    : 83.33
 
   const handleClick = () => {
     if (!disabled && onClick) {
@@ -115,11 +111,13 @@ export function Key({
       }}
     >
       {/* SVG border and background for ISO Enter key */}
-      {shape === 'iso-enter' && (
+      {shape === 'iso-enter' && upperWidth && lowerWidth && (
         <svg
           className="absolute inset-0 pointer-events-none"
           style={{ width: keyWidth, height: keyHeight }}
           viewBox={`0 0 ${keyWidth} ${keyHeight}`}
+          role="presentation"
+          aria-hidden="true"
         >
           {/* Background fill */}
           <path
