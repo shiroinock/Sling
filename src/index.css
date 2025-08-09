@@ -78,6 +78,11 @@ html.dark {
   color: var(--mapped-text-secondary);
 }
 
+/* ISO/JIS Enter key styles - Shape is handled entirely in SVG */
+.iso-enter-key {
+  position: relative;
+}
+
 /* Override Tailwind's dark mode classes to use CSS variables */
 html.dark .dark\:bg-gray-900 {
   background-color: var(--bg-primary);
