@@ -11,8 +11,9 @@ import { ImportExportHistory } from './ImportExportHistory'
 import { KeyMappingEditor } from './KeyMappingEditor'
 import { VisualKeyboard } from './keyboard/VisualKeyboard'
 import { ProfileTabs } from './ProfileTabs'
+import { BackupManager } from './BackupManager'
 
-type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'history'
+type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'history' | 'backup'
 
 const KEYBOARD_LAYOUT_STORAGE_KEY = 'sling-keyboard-layout'
 
@@ -25,7 +26,7 @@ export function ConfigurationEditor() {
   const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>(() => {
     // ローカルストレージから初期値を取得
     const savedLayout = localStorage.getItem(KEYBOARD_LAYOUT_STORAGE_KEY)
-    return (savedLayout as LayoutType) || 'us-ansi'
+    return (savedLayout as LayoutType) || 'macbook-us'
   })
   const [editingModification, setEditingModification] = useState<SimpleModification | null>(null)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
@@ -94,6 +95,7 @@ export function ConfigurationEditor() {
     { id: 'complex', label: 'Complex Modifications' },
     { id: 'function_keys', label: 'Function Keys' },
     { id: 'devices', label: 'Devices' },
+    { id: 'backup', label: 'Backup' },
     { id: 'history', label: 'History' }
   ]
 
@@ -117,7 +119,7 @@ export function ConfigurationEditor() {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-gray-100 rounded-lg transition-colors"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-gray-100 rounded-lg transition-colors"
               >
                 <FileUp className="w-4 h-4 mr-2" />
                 Load New
@@ -170,7 +172,7 @@ export function ConfigurationEditor() {
                     <select
                       value={keyboardLayout}
                       onChange={e => setKeyboardLayout(e.target.value as LayoutType)}
-                      className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
                     >
                       <option value="us-ansi">US ANSI</option>
                       <option value="jis">JIS</option>
@@ -274,6 +276,8 @@ export function ConfigurationEditor() {
                 <p>Device-specific settings coming soon...</p>
               </div>
             )}
+
+            {activeTab === 'backup' && <BackupManager />}
 
             {activeTab === 'history' && <ImportExportHistory />}
           </div>

@@ -20,7 +20,7 @@ interface VisualKeyboardProps {
 }
 
 export function VisualKeyboard({
-  layout = 'us-ansi',
+  layout = 'macbook-us',
   simpleModifications = [],
   selectedFromKey,
   selectedToKey,
