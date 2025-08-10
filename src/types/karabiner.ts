@@ -191,8 +191,11 @@ export interface Condition {
   identifiers?: DeviceIdentifier[]
   description?: string
   input_sources?: InputSource[]
-  variable_if?: VariableCondition
-  variable_unless?: VariableCondition
+  // For variable_if and variable_unless conditions, use name and value directly
+  name?: string
+  value?: string | number | boolean
+  variable_if?: VariableCondition  // Deprecated - for backwards compatibility
+  variable_unless?: VariableCondition  // Deprecated - for backwards compatibility
   keyboard_types?: string[]
 }
 
@@ -491,3 +494,113 @@ export const POINTING_BUTTONS = [
   'button31',
   'button32'
 ] as const
+
+// ================================================================================
+// Layer System Types (for QMK/VIA-like layer functionality)
+// ================================================================================
+
+/**
+ * Layer definition for multi-layer keyboard configurations
+ */
+export interface Layer {
+  id: string // UUID for internal reference
+  name: string
+  color?: string
+  description?: string
+  mappings: LayerMapping[]
+}
+
+/**
+ * Mapping for a single key in a layer
+ */
+export interface LayerMapping {
+  from: string // The physical key (e.g., 'a', 'caps_lock')
+  action: LayerAction
+}
+
+/**
+ * Action configuration for a key (supports tap/hold behaviors)
+ */
+export interface LayerAction {
+  type: 'simple' | 'mod-tap' | 'layer-tap' | 'layer-toggle' | 'layer-momentary'
+  tap?: KeyAction // Action when key is tapped
+  hold?: KeyAction // Action when key is held
+  tapToggleThreshold?: number // Number of taps to toggle (for TT-like behavior)
+}
+
+/**
+ * Single key action
+ */
+export interface KeyAction {
+  type: 'key' | 'modifier' | 'layer' | 'none'
+  key?: string // Key code to send
+  modifiers?: string[] // Modifiers to apply with the key
+  layer?: string // Layer ID (UUID) to activate (for layer actions)
+  layerAction?: 'momentary' | 'toggle' | 'activate' | 'oneshot' // How to activate the layer
+}
+
+/**
+ * Preset configuration for common tap/hold patterns
+ */
+export interface TapHoldPreset {
+  id: string
+  name: string
+  description: string
+  icon?: string
+  action: LayerAction
+  examples?: string[]
+}
+
+/**
+ * Common preset configurations
+ */
+export const TAP_HOLD_PRESETS: TapHoldPreset[] = [
+  {
+    id: 'caps-esc-ctrl',
+    name: 'Caps Lock → Esc/Ctrl',
+    description: 'Escape when tapped, Control when held',
+    action: {
+      type: 'mod-tap',
+      tap: { type: 'key', key: 'escape' },
+      hold: { type: 'modifier', modifiers: ['left_control'] }
+    },
+    examples: ['Popular for Vim users']
+  },
+  {
+    id: 'space-layer',
+    name: 'Space → Space/Layer',
+    description: 'Space when tapped, activate layer when held',
+    action: {
+      type: 'layer-tap',
+      tap: { type: 'key', key: 'spacebar' },
+      hold: { type: 'layer', layer: 1, layerAction: 'momentary' }
+    },
+    examples: ['Access symbols and numbers without moving hands']
+  },
+  {
+    id: 'tab-hyper',
+    name: 'Tab → Tab/Hyper',
+    description: 'Tab when tapped, Hyper (Cmd+Ctrl+Alt+Shift) when held',
+    action: {
+      type: 'mod-tap',
+      tap: { type: 'key', key: 'tab' },
+      hold: {
+        type: 'modifier',
+        modifiers: ['left_command', 'left_control', 'left_option', 'left_shift']
+      }
+    },
+    examples: ['Create a super modifier for shortcuts']
+  }
+]
+
+/**
+ * Layer configuration for the entire keyboard
+ */
+export interface LayerConfiguration {
+  layers: Layer[]
+  activeLayer?: string // Layer ID (UUID)
+  baseLayer?: string // Layer ID (UUID)
+}
+
+// Note: Layer variable name generation is handled in layerToKarabiner.ts
+// using the layer index (0, 1, 2...) instead of UUID

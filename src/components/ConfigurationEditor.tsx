@@ -2,6 +2,8 @@ import { saveAs } from 'file-saver'
 import { Download, FileUp, Plus, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { LayoutType } from '@/data/keyboardLayouts'
+import { convertLayersToKarabinerRules } from '@/lib/layerToKarabiner'
+import { useLayerStore } from '@/store/layers'
 import { cn } from '../lib/utils'
 import { useKarabinerStore } from '../store/karabiner'
 import { BackupManager } from './BackupManager'
@@ -10,16 +12,19 @@ import { ComplexModificationsList } from './ComplexModificationsList'
 import { DeviceManager } from './DeviceManager'
 import { DeviceTargetSelector } from './DeviceTargetSelector'
 import { ImportExportHistory } from './ImportExportHistory'
+import { LayerManager } from './LayerManager'
+import { LayerVisualKeyboard } from './LayerVisualKeyboard'
 import { ProfileTabs } from './ProfileTabs'
 import { UnifiedSimpleModifications } from './UnifiedSimpleModifications'
 
-type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'history' | 'backup'
+type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'layers' | 'history' | 'backup'
 
 const KEYBOARD_LAYOUT_STORAGE_KEY = 'sling-keyboard-layout'
 
 export function ConfigurationEditor() {
   const { config, reset, selectedRuleIndex, selectedProfileIndex, selectRule, addHistoryEntry } =
     useKarabinerStore()
+  const { selectedLayerId, layerConfiguration } = useLayerStore()
   const [activeTab, setActiveTab] = useState<TabType>('simple')
   const [isComplexEditorOpen, setIsComplexEditorOpen] = useState(false)
   const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>(() => {
@@ -39,7 +44,26 @@ export function ConfigurationEditor() {
   if (!config) return null
 
   const handleExport = () => {
-    const blob = new Blob([JSON.stringify(config, null, 2)], {
+    // Clone the config to avoid mutating the original
+    const exportConfig = JSON.parse(JSON.stringify(config))
+    
+    // Add layer rules to each profile's complex_modifications
+    if (layerConfiguration.layers.length > 0) {
+      const layerRules = convertLayersToKarabinerRules(layerConfiguration)
+      
+      exportConfig.profiles.forEach((profile: any) => {
+        if (!profile.complex_modifications) {
+          profile.complex_modifications = { rules: [] }
+        }
+        if (!profile.complex_modifications.rules) {
+          profile.complex_modifications.rules = []
+        }
+        // Add layer rules at the beginning for higher priority
+        profile.complex_modifications.rules.unshift(...layerRules)
+      })
+    }
+    
+    const blob = new Blob([JSON.stringify(exportConfig, null, 2)], {
       type: 'application/json'
     })
     const fileName = `karabiner-${new Date().toISOString().split('T')[0]}.json`
@@ -65,6 +89,7 @@ export function ConfigurationEditor() {
   const tabs: { id: TabType; label: string }[] = [
     { id: 'simple', label: 'Simple Modifications' },
     { id: 'complex', label: 'Complex Modifications' },
+    { id: 'layers', label: 'Layers (Beta)' },
     { id: 'function_keys', label: 'Function Keys' },
     { id: 'devices', label: 'Devices' },
     { id: 'backup', label: 'Backup' },
@@ -205,6 +230,12 @@ export function ConfigurationEditor() {
             {activeTab === 'function_keys' && (
               <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                 <p>Function Keys editor coming soon...</p>
+              </div>
+            )}
+
+            {activeTab === 'layers' && (
+              <div className="space-y-6">
+                <LayerManager keyboardLayout={keyboardLayout} />
               </div>
             )}
 

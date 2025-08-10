@@ -242,3 +242,36 @@ sling/
 - **プライマリ**: `blue-600` (ボタン、リンク、フォーカス)
 - **成功**: `green-500` (マッピング済みキー)
 - **エラー**: `red-500` (削除ボタン)
+
+## レイヤー機能実装メモ（開発中）
+
+### Karabiner変換パターン
+```json
+// MO(layer) - momentary
+{"from": KEY, "to": [{"set_variable": {"name": "sling_layer_X_active", "value": 1}}], "to_after_key_up": [{"set_variable": {"name": "sling_layer_X_active", "value": 0}}]}
+
+// LT(layer,key) - layer-tap
+{"from": KEY, "to": [{"set_variable": {"name": "sling_layer_X_active", "value": 1}}], "to_if_alone": [{"key_code": KEY}], "to_after_key_up": [{"set_variable": {"name": "sling_layer_X_active", "value": 0}}]}
+
+// MT(mod,key) - mod-tap
+{"from": KEY, "to": [{"key_code": KEY, "modifiers": [MOD]}], "to_if_alone": [{"key_code": KEY}]}
+
+// Layer条件
+{"conditions": [{"type": "variable_if", "name": "sling_layer_X_active", "value": 1}]}
+```
+
+### 実装時の注意点
+- 変数名: `sling_layer_{id}_active`
+- 複数レイヤー同時有効化は優先度で解決（高い番号が優先）
+- to_if_alone_timeout_milliseconds: デフォルト1000ms
+- to_if_held_down_threshold_milliseconds: デフォルト500ms
+
+### ストア拡張メモ
+- layerConfiguration: LayerConfiguration型で管理
+- generateComplexModifications(): レイヤー設定からKarabiner Rulesを自動生成
+- レイヤー状態はComplex Modificationsのルールとして保存
+
+### UI実装順序
+1. LayerManager（タブUI） → レイヤー切り替えと管理
+2. ActionSelector（動作選択） → タップ/ホールド設定
+3. LayerVisualKeyboard → レイヤーごとのキー表示
