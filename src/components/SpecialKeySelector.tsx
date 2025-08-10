@@ -8,62 +8,62 @@ interface SpecialKeySelectorProps {
   onKeySelect: (keyCode: string) => void
 }
 
-// キーの説明情報
+// Key descriptions
 const keyDescriptions: Record<string, string> = {
-  // メディアキー
-  play_or_pause: 'メディアの再生と一時停止を切り替えます',
-  fastforward: 'メディアを早送りします',
-  rewind: 'メディアを巻き戻します',
-  volume_up: 'システムの音量を上げます',
-  volume_down: 'システムの音量を下げます',
-  mute: 'システムの音声をミュート/ミュート解除します',
-  eject: 'ディスクをイジェクトします',
+  // Media keys
+  play_or_pause: 'Toggle media play/pause',
+  fastforward: 'Fast forward media',
+  rewind: 'Rewind media',
+  volume_up: 'Increase system volume',
+  volume_down: 'Decrease system volume',
+  mute: 'Toggle system mute',
+  eject: 'Eject disk',
   
-  // ディスプレイキー
-  display_brightness_up: 'ディスプレイの明るさを上げます',
-  display_brightness_down: 'ディスプレイの明るさを下げます',
-  apple_display_brightness_up: 'Apple製ディスプレイの明るさを上げます',
-  apple_display_brightness_down: 'Apple製ディスプレイの明るさを下げます',
-  apple_top_case_display_brightness_up: 'Touch Barの明るさを上げます',
-  apple_top_case_display_brightness_down: 'Touch Barの明るさを下げます',
+  // Display keys
+  display_brightness_up: 'Increase display brightness',
+  display_brightness_down: 'Decrease display brightness',
+  apple_display_brightness_up: 'Increase Apple display brightness',
+  apple_display_brightness_down: 'Decrease Apple display brightness',
+  apple_top_case_display_brightness_up: 'Increase Touch Bar brightness',
+  apple_top_case_display_brightness_down: 'Decrease Touch Bar brightness',
   
-  // システムキー
-  power: 'システムの電源ボタン',
-  mission_control: 'Mission Controlを開きます',
-  launchpad: 'Launchpadを開きます',
-  dashboard: 'Dashboardを開きます',
-  illumination_up: 'キーボードバックライトを明るくします',
-  illumination_down: 'キーボードバックライトを暗くします',
+  // System keys
+  power: 'System power button',
+  mission_control: 'Open Mission Control',
+  launchpad: 'Open Launchpad',
+  dashboard: 'Open Dashboard',
+  illumination_up: 'Increase keyboard backlight',
+  illumination_down: 'Decrease keyboard backlight',
   
-  // ナビゲーションキー
-  page_up: '1ページ上にスクロールします',
-  page_down: '1ページ下にスクロールします',
-  home: 'ドキュメントの先頭に移動します',
-  end: 'ドキュメントの末尾に移動します',
-  insert: '挿入モードを切り替えます',
-  print_screen: 'スクリーンショットを撮影します',
-  scroll_lock: 'スクロールロックを切り替えます',
-  pause: 'システムを一時停止します',
+  // Navigation keys
+  page_up: 'Scroll up one page',
+  page_down: 'Scroll down one page',
+  home: 'Move to document beginning',
+  end: 'Move to document end',
+  insert: 'Toggle insert mode',
+  print_screen: 'Take screenshot',
+  scroll_lock: 'Toggle scroll lock',
+  pause: 'Pause system',
   
-  // テンキー
-  keypad_num_lock: 'テンキーのNum Lockを切り替えます',
-  keypad_enter: 'テンキーのEnterキー',
-  keypad_equal_sign: 'テンキーの=キー（電卓用）'
+  // Numpad keys
+  keypad_num_lock: 'Toggle numpad Num Lock',
+  keypad_enter: 'Numpad Enter key',
+  keypad_equal_sign: 'Numpad = key (for calculator)'
 }
 
-// キーのカテゴリ分け
+// Key categories
 const keyCategories = {
   functionKeys: {
-    label: 'ファンクションキー',
+    label: 'Function Keys',
     keys: Array.from({ length: 24 }, (_, i) => ({
       code: `f${i + 1}`,
       label: `F${i + 1}`,
       width: 1,
-      description: i >= 12 ? `拡張ファンクションキー F${i + 1}` : undefined
+      description: i >= 12 ? `Extended function key F${i + 1}` : undefined
     }))
   },
   mediaKeys: {
-    label: 'メディアキー',
+    label: 'Media Keys',
     keys: [
       { code: 'play_or_pause', label: '⏯', width: 1, isConsumer: true },
       { code: 'fastforward', label: '⏩', width: 1, isConsumer: true },
@@ -75,7 +75,7 @@ const keyCategories = {
     ]
   },
   displayKeys: {
-    label: 'ディスプレイ',
+    label: 'Display',
     keys: [
       { code: 'display_brightness_up', label: '☀️+', width: 1.5, isConsumer: true },
       { code: 'display_brightness_down', label: '☀️-', width: 1.5, isConsumer: true },
@@ -86,7 +86,7 @@ const keyCategories = {
     ]
   },
   systemKeys: {
-    label: 'システム',
+    label: 'System',
     keys: [
       { code: 'power', label: '⏻', width: 1, isConsumer: true },
       { code: 'mission_control', label: 'MC', width: 1.25 },
@@ -97,7 +97,7 @@ const keyCategories = {
     ]
   },
   navigationKeys: {
-    label: 'ナビゲーション',
+    label: 'Navigation',
     keys: [
       { code: 'page_up', label: 'PgUp', width: 1.25 },
       { code: 'page_down', label: 'PgDn', width: 1.25 },
@@ -110,7 +110,7 @@ const keyCategories = {
     ]
   },
   numpadKeys: {
-    label: 'テンキー',
+    label: 'Numpad',
     keys: [
       { code: 'keypad_num_lock', label: 'Num', width: 1 },
       { code: 'keypad_slash', label: '/', width: 1 },
@@ -157,12 +157,12 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
     <div className="space-y-4">
       <Tabs defaultValue="function" className="w-full">
         <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
-          <TabsTrigger value="function">ファンクション</TabsTrigger>
-          <TabsTrigger value="media">メディア</TabsTrigger>
-          <TabsTrigger value="display">ディスプレイ</TabsTrigger>
-          <TabsTrigger value="system">システム</TabsTrigger>
-          <TabsTrigger value="navigation">ナビ</TabsTrigger>
-          <TabsTrigger value="numpad">テンキー</TabsTrigger>
+          <TabsTrigger value="function">Function</TabsTrigger>
+          <TabsTrigger value="media">Media</TabsTrigger>
+          <TabsTrigger value="display">Display</TabsTrigger>
+          <TabsTrigger value="system">System</TabsTrigger>
+          <TabsTrigger value="navigation">Navigation</TabsTrigger>
+          <TabsTrigger value="numpad">Numpad</TabsTrigger>
         </TabsList>
 
         <TabsContent value="function" className="mt-4">

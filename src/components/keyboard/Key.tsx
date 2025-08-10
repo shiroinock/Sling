@@ -147,7 +147,7 @@ export function Key({
             : isMapped && shape !== 'iso-enter'
               ? 'mapped-key shadow-md'
               : shape !== 'iso-enter' &&
-                'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800',
+                'border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700',
           !disabled && !isSelected && 'hover:border-gray-400 dark:hover:border-gray-500'
         )}
         style={{
@@ -255,7 +255,7 @@ export function Key({
                 ? 'text-blue-700 dark:text-blue-300'
                 : isMapped
                   ? 'mapped-text'
-                  : 'text-gray-700 dark:text-gray-300',
+                  : 'text-gray-700 dark:text-gray-200',
               (isMapped && mappedTo ? mappedTo.length : label.length) > 5 && 'text-xs'
             )}
           >
