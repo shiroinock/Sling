@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { LayoutType } from '@/data/keyboardLayouts'
 import { cn } from '@/lib/utils'
 import { useKarabinerStore } from '@/store/karabiner'
-import type { SimpleModification } from '@/types/karabiner'
+import type { FromKeyCode, SimpleModification, ToKeyCode } from '@/types/karabiner'
 import { VisualKeyboard } from './keyboard/VisualKeyboard'
 import { ModifierKeySelector } from './ModifierKeySelector'
 import { SpecialKeySelector } from './SpecialKeySelector'
@@ -15,6 +15,10 @@ interface KeyMappingEditorProps {
   editingModification?: SimpleModification | null
   editingIndex?: number | null
   currentLayout?: LayoutType
+  onSave?: (from: FromKeyCode, to: ToKeyCode[]) => void
+  initialFrom?: FromKeyCode
+  initialTo?: ToKeyCode[]
+  isDeviceSpecific?: boolean
 }
 
 export function KeyMappingEditor({
@@ -22,7 +26,11 @@ export function KeyMappingEditor({
   onClose,
   editingModification,
   editingIndex,
-  currentLayout = 'macbook-us'
+  currentLayout = 'macbook-us',
+  onSave,
+  initialFrom,
+  initialTo,
+  isDeviceSpecific = false
 }: KeyMappingEditorProps) {
   const { addSimpleModification, updateSimpleModification, deleteSimpleModification } =
     useKarabinerStore()
@@ -40,23 +48,28 @@ export function KeyMappingEditor({
   }, [currentLayout])
 
   useEffect(() => {
-    if (isOpen && editingModification) {
-      setFromKey(editingModification.from.key_code || '')
-      // Handle both key_code and consumer_key_code
-      const toEvent = editingModification.to[0]
-      if (toEvent?.consumer_key_code) {
-        setToKey(`consumer_${toEvent.consumer_key_code}`)
-      } else {
-        setToKey(toEvent?.key_code || '')
+    if (isOpen) {
+      const modification =
+        editingModification ||
+        (initialFrom && initialTo ? { from: initialFrom, to: initialTo } : null)
+      if (modification) {
+        setFromKey(modification.from.key_code || '')
+        // Handle both key_code and consumer_key_code
+        const toEvent = modification.to[0]
+        if (toEvent?.consumer_key_code) {
+          setToKey(`consumer_${toEvent.consumer_key_code}`)
+        } else {
+          setToKey(toEvent?.key_code || '')
+        }
+        setFromModifiers(modification.from.modifiers?.mandatory || [])
+        setToModifiers(modification.to[0]?.modifiers || [])
+        setShowModifiers(
+          (modification.from.modifiers?.mandatory?.length || 0) > 0 ||
+            (modification.to[0]?.modifiers?.length || 0) > 0
+        )
       }
-      setFromModifiers(editingModification.from.modifiers?.mandatory || [])
-      setToModifiers(editingModification.to[0]?.modifiers || [])
-      setShowModifiers(
-        (editingModification.from.modifiers?.mandatory?.length || 0) > 0 ||
-          (editingModification.to[0]?.modifiers?.length || 0) > 0
-      )
     }
-  }, [isOpen, editingModification])
+  }, [isOpen, editingModification, initialFrom, initialTo])
 
   if (!isOpen) return null
 
@@ -81,10 +94,16 @@ export function KeyMappingEditor({
       ]
     }
 
-    if (editingIndex !== null && editingIndex !== undefined) {
-      updateSimpleModification(editingIndex, modification)
+    if (isDeviceSpecific && onSave) {
+      // For device-specific modifications, use the onSave callback
+      onSave(modification.from, modification.to)
     } else {
-      addSimpleModification(modification)
+      // For profile-level modifications, use the store methods
+      if (editingIndex !== null && editingIndex !== undefined) {
+        updateSimpleModification(editingIndex, modification)
+      } else {
+        addSimpleModification(modification)
+      }
     }
 
     handleClose()
@@ -100,7 +119,7 @@ export function KeyMappingEditor({
   }
 
   const handleDelete = () => {
-    if (editingIndex !== null && editingIndex !== undefined) {
+    if (!isDeviceSpecific && editingIndex !== null && editingIndex !== undefined) {
       deleteSimpleModification(editingIndex)
       handleClose()
     }

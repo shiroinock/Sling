@@ -32,7 +32,7 @@ export const useBackupStore = create<BackupStore>()(
       createBackup: (config: KarabinerConfig, name?: string, description?: string) => {
         const id = `backup-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
         const timestamp = new Date()
-        
+
         const profileCount = config.profiles.length
         const ruleCount = config.profiles.reduce(
           (acc, profile) => acc + (profile.complex_modifications?.rules?.length || 0),
@@ -49,9 +49,9 @@ export const useBackupStore = create<BackupStore>()(
           description
         }
 
-        set((state) => {
+        set(state => {
           let newBackups = [backup, ...state.backups]
-          
+
           // 最大数を超えたら古いものから削除
           if (newBackups.length > state.maxBackups) {
             newBackups = newBackups.slice(0, state.maxBackups)
@@ -64,13 +64,13 @@ export const useBackupStore = create<BackupStore>()(
       },
 
       deleteBackup: (id: string) => {
-        set((state) => ({
-          backups: state.backups.filter((b) => b.id !== id)
+        set(state => ({
+          backups: state.backups.filter(b => b.id !== id)
         }))
       },
 
       restoreBackup: (id: string) => {
-        const backup = get().backups.find((b) => b.id === id)
+        const backup = get().backups.find(b => b.id === id)
         return backup?.config || null
       },
 
@@ -79,18 +79,14 @@ export const useBackupStore = create<BackupStore>()(
       },
 
       renameBackup: (id: string, newName: string) => {
-        set((state) => ({
-          backups: state.backups.map((b) =>
-            b.id === id ? { ...b, name: newName } : b
-          )
+        set(state => ({
+          backups: state.backups.map(b => (b.id === id ? { ...b, name: newName } : b))
         }))
       },
 
       updateDescription: (id: string, description: string) => {
-        set((state) => ({
-          backups: state.backups.map((b) =>
-            b.id === id ? { ...b, description } : b
-          )
+        set(state => ({
+          backups: state.backups.map(b => (b.id === id ? { ...b, description } : b))
         }))
       }
     }),

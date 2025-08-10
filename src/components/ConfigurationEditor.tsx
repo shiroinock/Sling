@@ -2,35 +2,34 @@ import { saveAs } from 'file-saver'
 import { Download, FileUp, Plus, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { LayoutType } from '@/data/keyboardLayouts'
-import type { SimpleModification } from '@/types/karabiner'
 import { cn } from '../lib/utils'
 import { useKarabinerStore } from '../store/karabiner'
+import { BackupManager } from './BackupManager'
 import { ComplexModificationEditor } from './ComplexModificationEditor'
 import { ComplexModificationsList } from './ComplexModificationsList'
+import { DeviceManager } from './DeviceManager'
+import { DeviceTargetSelector } from './DeviceTargetSelector'
 import { ImportExportHistory } from './ImportExportHistory'
-import { KeyMappingEditor } from './KeyMappingEditor'
-import { VisualKeyboard } from './keyboard/VisualKeyboard'
 import { ProfileTabs } from './ProfileTabs'
-import { BackupManager } from './BackupManager'
+import { UnifiedSimpleModifications } from './UnifiedSimpleModifications'
 
 type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'history' | 'backup'
 
 const KEYBOARD_LAYOUT_STORAGE_KEY = 'sling-keyboard-layout'
 
 export function ConfigurationEditor() {
-  const { config, reset, selectedProfileIndex, selectedRuleIndex, selectRule, addHistoryEntry } =
+  const { config, reset, selectedRuleIndex, selectedProfileIndex, selectRule, addHistoryEntry } =
     useKarabinerStore()
   const [activeTab, setActiveTab] = useState<TabType>('simple')
-  const [isEditorOpen, setIsEditorOpen] = useState(false)
   const [isComplexEditorOpen, setIsComplexEditorOpen] = useState(false)
   const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>(() => {
     // ローカルストレージから初期値を取得
     const savedLayout = localStorage.getItem(KEYBOARD_LAYOUT_STORAGE_KEY)
     return (savedLayout as LayoutType) || 'macbook-us'
   })
-  const [editingModification, setEditingModification] = useState<SimpleModification | null>(null)
-  const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState<number | null>(null)
+  const [isDeviceMode, setIsDeviceMode] = useState(false)
 
   // キーボードレイアウトが変更されたらローカルストレージに保存
   useEffect(() => {
@@ -56,33 +55,6 @@ export function ConfigurationEditor() {
         0
       )
     })
-  }
-
-  const handleKeyClick = (keyCode: string) => {
-    const simpleModifications = config.profiles[selectedProfileIndex].simple_modifications || []
-    const existingModIndex = simpleModifications.findIndex(mod => mod.from.key_code === keyCode)
-
-    if (existingModIndex !== -1) {
-      // Edit existing mapping
-      setEditingModification(simpleModifications[existingModIndex])
-      setEditingIndex(existingModIndex)
-    } else {
-      // Create new mapping
-      const newModification: SimpleModification = {
-        from: { key_code: keyCode },
-        to: [{ key_code: '' }]
-      }
-      setEditingModification(newModification)
-      setEditingIndex(null)
-    }
-
-    setIsEditorOpen(true)
-  }
-
-  const handleEditorClose = () => {
-    setIsEditorOpen(false)
-    setEditingModification(null)
-    setEditingIndex(null)
   }
 
   const handleEditComplexRule = (index: number) => {
@@ -152,23 +124,27 @@ export function ConfigurationEditor() {
           </div>
 
           <div className="mt-6">
-            {activeTab === 'simple' && (
+            {activeTab === 'simple' && config && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                     Simple Modifications
                   </h3>
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Search mappings..."
-                        value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
-                        className="pl-10 pr-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                      />
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <DeviceTargetSelector
+                      devices={config.profiles[selectedProfileIndex]?.devices || []}
+                      value={isDeviceMode ? `device-${selectedDeviceIndex}` : 'profile'}
+                      onChange={value => {
+                        if (value === 'profile') {
+                          setIsDeviceMode(false)
+                          setSelectedDeviceIndex(null)
+                        } else {
+                          const deviceIndex = parseInt(value.replace('device-', ''))
+                          setIsDeviceMode(true)
+                          setSelectedDeviceIndex(deviceIndex)
+                        }
+                      }}
+                    />
                     <select
                       value={keyboardLayout}
                       onChange={e => setKeyboardLayout(e.target.value as LayoutType)}
@@ -180,54 +156,15 @@ export function ConfigurationEditor() {
                       <option value="macbook-jis">MacBook JIS</option>
                       <option value="jis-enter-test">JIS Enter Test</option>
                     </select>
-                    <button
-                      type="button"
-                      onClick={() => setIsEditorOpen(true)}
-                      className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      Add Modification
-                    </button>
                   </div>
                 </div>
 
-                {/* Visual Keyboard Display */}
-                <div className="space-y-4">
-                  <div className="flex justify-center">
-                    <VisualKeyboard
-                      key={keyboardLayout} // レイアウト変更時に再マウント
-                      layout={keyboardLayout}
-                      simpleModifications={
-                        config.profiles[selectedProfileIndex].simple_modifications || []
-                      }
-                      mode="view"
-                      onKeyClick={handleKeyClick}
-                      searchTerm={searchTerm}
-                      keyPadding={1}
-                    />
-                  </div>
-
-                  {/* Legend or Empty State Message */}
-                  {(config.profiles[selectedProfileIndex].simple_modifications?.length ?? 0) > 0 ? (
-                    <div className="flex justify-center">
-                      <div className="inline-flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-                        <div className="flex items-center gap-2">
-                          <div className="w-12 h-8 rounded mapped-key shadow-md" />
-                          <span>Mapped key</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-12 h-8 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800" />
-                          <span>Normal key</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-                      No key mappings configured. Click "Add Modification" to create your first
-                      mapping.
-                    </div>
-                  )}
-                </div>
+                {/* Unified Simple Modifications with Device Support */}
+                <UnifiedSimpleModifications
+                  keyboardLayout={keyboardLayout}
+                  selectedDeviceIndex={selectedDeviceIndex}
+                  isDeviceMode={isDeviceMode}
+                />
               </div>
             )}
 
@@ -271,11 +208,7 @@ export function ConfigurationEditor() {
               </div>
             )}
 
-            {activeTab === 'devices' && (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                <p>Device-specific settings coming soon...</p>
-              </div>
-            )}
+            {activeTab === 'devices' && <DeviceManager />}
 
             {activeTab === 'backup' && <BackupManager />}
 
@@ -283,15 +216,6 @@ export function ConfigurationEditor() {
           </div>
         </div>
       </div>
-
-      {/* Key Mapping Editor Modal */}
-      <KeyMappingEditor
-        isOpen={isEditorOpen}
-        onClose={handleEditorClose}
-        editingModification={editingModification}
-        editingIndex={editingIndex}
-        currentLayout={keyboardLayout}
-      />
 
       {/* Complex Modification Editor Modal */}
       <ComplexModificationEditor

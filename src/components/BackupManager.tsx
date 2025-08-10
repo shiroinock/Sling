@@ -1,22 +1,22 @@
-import { Archive, Clock, Download, RotateCcw, Save, Trash2, Edit2, Check, X } from 'lucide-react'
-import { useState } from 'react'
-import { useBackupStore } from '@/store/backup'
-import { useKarabinerStore } from '@/store/karabiner'
-import { cn } from '@/lib/utils'
 import { saveAs } from 'file-saver'
+import { Archive, Check, Clock, Download, Edit2, RotateCcw, Save, Trash2, X } from 'lucide-react'
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
+import { type ConfigBackup, useBackupStore } from '@/store/backup'
+import { useKarabinerStore } from '@/store/karabiner'
 
 export function BackupManager() {
   const { config, setConfig } = useKarabinerStore()
-  const { 
-    backups, 
-    createBackup, 
-    deleteBackup, 
-    restoreBackup, 
+  const {
+    backups,
+    createBackup,
+    deleteBackup,
+    restoreBackup,
     clearAllBackups,
     renameBackup,
     updateDescription
   } = useBackupStore()
-  
+
   const [backupName, setBackupName] = useState('')
   const [backupDescription, setBackupDescription] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -25,10 +25,10 @@ export function BackupManager() {
 
   const handleCreateBackup = () => {
     if (!config) return
-    
+
     const name = backupName.trim() || undefined
     const description = backupDescription.trim() || undefined
-    
+
     createBackup(config, name, description)
     setBackupName('')
     setBackupDescription('')
@@ -41,15 +41,15 @@ export function BackupManager() {
     }
   }
 
-  const handleExportBackup = (backup: any) => {
+  const handleExportBackup = (backup: ConfigBackup) => {
     const blob = new Blob([JSON.stringify(backup.config, null, 2)], {
       type: 'application/json'
     })
-    const fileName = `karabiner-backup-${backup.timestamp.toISOString().split('T')[0]}.json`
+    const fileName = `karabiner-backup-${new Date(backup.timestamp).toISOString().split('T')[0]}.json`
     saveAs(blob, fileName)
   }
 
-  const startEditing = (backup: any) => {
+  const startEditing = (backup: ConfigBackup) => {
     setEditingId(backup.id)
     setEditingName(backup.name)
     setEditingDesc(backup.description || '')
@@ -79,45 +79,51 @@ export function BackupManager() {
           <Save className="w-5 h-5" />
           Create New Backup
         </h3>
-        
+
         <div className="space-y-3">
           <div>
-            <label htmlFor="backup-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="backup-name"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Backup Name (Optional)
             </label>
             <input
               id="backup-name"
               type="text"
               value={backupName}
-              onChange={(e) => setBackupName(e.target.value)}
+              onChange={e => setBackupName(e.target.value)}
               placeholder="e.g., Stable Configuration"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
           </div>
-          
+
           <div>
-            <label htmlFor="backup-desc" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="backup-desc"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Description (Optional)
             </label>
             <textarea
               id="backup-desc"
               value={backupDescription}
-              onChange={(e) => setBackupDescription(e.target.value)}
+              onChange={e => setBackupDescription(e.target.value)}
               placeholder="e.g., All settings working properly"
               rows={2}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
           </div>
-          
+
           <button
             type="button"
             onClick={handleCreateBackup}
             disabled={!config}
             className={cn(
-              "w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors",
+              'w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors',
               config
-                ? "text-white bg-blue-600 hover:bg-blue-700"
-                : "text-gray-400 bg-gray-200 dark:bg-gray-700 cursor-not-allowed"
+                ? 'text-white bg-blue-600 hover:bg-blue-700'
+                : 'text-gray-400 bg-gray-200 dark:bg-gray-700 cursor-not-allowed'
             )}
           >
             <Archive className="w-4 h-4 inline-block mr-2" />
@@ -132,7 +138,7 @@ export function BackupManager() {
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
             Saved Backups ({backups.length}/{useBackupStore.getState().maxBackups})
           </h3>
-          
+
           {backups.length > 0 && (
             <button
               type="button"
@@ -152,10 +158,10 @@ export function BackupManager() {
           </div>
         ) : (
           <div className="space-y-3">
-            {backups.map((backup) => {
+            {backups.map(backup => {
               const isEditing = editingId === backup.id
               const backupDate = new Date(backup.timestamp)
-              
+
               return (
                 <div
                   key={backup.id}
@@ -167,25 +173,26 @@ export function BackupManager() {
                       <input
                         type="text"
                         value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
+                        onChange={e => setEditingName(e.target.value)}
                         className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        autoFocus
                       />
                       <textarea
                         value={editingDesc}
-                        onChange={(e) => setEditingDesc(e.target.value)}
+                        onChange={e => setEditingDesc(e.target.value)}
                         placeholder="Add description..."
                         rows={2}
                         className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                       />
                       <div className="flex gap-2">
                         <button
+                          type="button"
                           onClick={() => saveEdit(backup.id)}
                           className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
                         >
                           <Check className="w-4 h-4" />
                         </button>
                         <button
+                          type="button"
                           onClick={cancelEdit}
                           className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
                         >
@@ -201,6 +208,7 @@ export function BackupManager() {
                           <h4 className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
                             {backup.name}
                             <button
+                              type="button"
                               onClick={() => startEditing(backup)}
                               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                             >
@@ -214,7 +222,7 @@ export function BackupManager() {
                           )}
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
@@ -223,9 +231,10 @@ export function BackupManager() {
                         <span>{backup.profileCount} profiles</span>
                         <span>{backup.ruleCount} rules</span>
                       </div>
-                      
+
                       <div className="flex gap-2">
                         <button
+                          type="button"
                           onClick={() => handleRestore(backup.id)}
                           className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1"
                         >
@@ -233,6 +242,7 @@ export function BackupManager() {
                           Restore
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleExportBackup(backup)}
                           className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-1"
                         >
@@ -240,6 +250,7 @@ export function BackupManager() {
                           Export
                         </button>
                         <button
+                          type="button"
                           onClick={() => deleteBackup(backup.id)}
                           className="px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded flex items-center gap-1"
                         >

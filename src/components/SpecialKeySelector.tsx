@@ -18,7 +18,7 @@ const keyDescriptions: Record<string, string> = {
   volume_down: 'Decrease system volume',
   mute: 'Toggle system mute',
   eject: 'Eject disk',
-  
+
   // Display keys
   display_brightness_up: 'Increase display brightness',
   display_brightness_down: 'Decrease display brightness',
@@ -26,7 +26,7 @@ const keyDescriptions: Record<string, string> = {
   apple_display_brightness_down: 'Decrease Apple display brightness',
   apple_top_case_display_brightness_up: 'Increase Touch Bar brightness',
   apple_top_case_display_brightness_down: 'Decrease Touch Bar brightness',
-  
+
   // System keys
   power: 'System power button',
   mission_control: 'Open Mission Control',
@@ -34,7 +34,7 @@ const keyDescriptions: Record<string, string> = {
   dashboard: 'Open Dashboard',
   illumination_up: 'Increase keyboard backlight',
   illumination_down: 'Decrease keyboard backlight',
-  
+
   // Navigation keys
   page_up: 'Scroll up one page',
   page_down: 'Scroll down one page',
@@ -44,7 +44,7 @@ const keyDescriptions: Record<string, string> = {
   print_screen: 'Take screenshot',
   scroll_lock: 'Toggle scroll lock',
   pause: 'Pause system',
-  
+
   // Numpad keys
   keypad_num_lock: 'Toggle numpad Num Lock',
   keypad_enter: 'Numpad Enter key',
@@ -146,7 +146,12 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
     }
   }
 
-  const createKeyData = (key: any): KeyData => ({
+  const createKeyData = (key: {
+    code: string
+    label: string
+    width?: number
+    height?: number
+  }): KeyData => ({
     keyCode: key.code,
     label: key.label,
     width: key.width || 1,
@@ -259,85 +264,123 @@ export const SpecialKeySelector: React.FC<SpecialKeySelectorProps> = ({ onKeySel
           <ScrollArea className="h-[300px] w-full rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-4 gap-1" style={{ width: '240px' }}>
               {/* Row 1 */}
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[0])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[0].code)}
-                   tooltip={keyDescriptions[keyCategories.numpadKeys.keys[0].code]}
-                   showTooltip={!!keyDescriptions[keyCategories.numpadKeys.keys[0].code]}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[1])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[1].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[2])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[2].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[3])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[3].code)}
-                   padding={1} />
-              
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[0])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[0].code)}
+                tooltip={keyDescriptions[keyCategories.numpadKeys.keys[0].code]}
+                showTooltip={!!keyDescriptions[keyCategories.numpadKeys.keys[0].code]}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[1])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[1].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[2])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[2].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[3])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[3].code)}
+                padding={1}
+              />
+
               {/* Row 2 - 7,8,9,+ */}
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[4])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[4].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[5])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[5].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[6])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[6].code)}
-                   padding={1} />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[4])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[4].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[5])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[5].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[6])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[6].code)}
+                padding={1}
+              />
               <div className="row-span-2">
-                <Key keyData={createKeyData(keyCategories.numpadKeys.keys[7])} 
-                     onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[7].code)}
-                     padding={1} />
+                <Key
+                  keyData={createKeyData(keyCategories.numpadKeys.keys[7])}
+                  onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[7].code)}
+                  padding={1}
+                />
               </div>
-              
+
               {/* Row 3 - 4,5,6 */}
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[8])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[8].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[9])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[9].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[10])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[10].code)}
-                   padding={1} />
-              
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[8])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[8].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[9])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[9].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[10])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[10].code)}
+                padding={1}
+              />
+
               {/* Row 4 - 1,2,3,Enter */}
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[11])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[11].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[12])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[12].code)}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[13])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[13].code)}
-                   padding={1} />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[11])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[11].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[12])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[12].code)}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[13])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[13].code)}
+                padding={1}
+              />
               <div className="row-span-2">
-                <Key keyData={createKeyData(keyCategories.numpadKeys.keys[14])} 
-                     onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[14].code)}
-                     tooltip={keyDescriptions[keyCategories.numpadKeys.keys[14].code]}
-                     showTooltip={!!keyDescriptions[keyCategories.numpadKeys.keys[14].code]}
-                     padding={1} />
+                <Key
+                  keyData={createKeyData(keyCategories.numpadKeys.keys[14])}
+                  onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[14].code)}
+                  tooltip={keyDescriptions[keyCategories.numpadKeys.keys[14].code]}
+                  showTooltip={!!keyDescriptions[keyCategories.numpadKeys.keys[14].code]}
+                  padding={1}
+                />
               </div>
-              
+
               {/* Row 5 - 0(double width), ., = */}
               <div className="col-span-2">
-                <Key keyData={createKeyData(keyCategories.numpadKeys.keys[15])} 
-                     onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[15].code)}
-                     padding={1} />
+                <Key
+                  keyData={createKeyData(keyCategories.numpadKeys.keys[15])}
+                  onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[15].code)}
+                  padding={1}
+                />
               </div>
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[16])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[16].code)}
-                   padding={1} />
-              
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[16])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[16].code)}
+                padding={1}
+              />
+
               {/* Additional keys */}
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[17])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[17].code)}
-                   tooltip={keyDescriptions[keyCategories.numpadKeys.keys[17].code]}
-                   showTooltip={!!keyDescriptions[keyCategories.numpadKeys.keys[17].code]}
-                   padding={1} />
-              <Key keyData={createKeyData(keyCategories.numpadKeys.keys[18])} 
-                   onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[18].code)}
-                   padding={1} />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[17])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[17].code)}
+                tooltip={keyDescriptions[keyCategories.numpadKeys.keys[17].code]}
+                showTooltip={!!keyDescriptions[keyCategories.numpadKeys.keys[17].code]}
+                padding={1}
+              />
+              <Key
+                keyData={createKeyData(keyCategories.numpadKeys.keys[18])}
+                onClick={() => handleKeyClick(keyCategories.numpadKeys.keys[18].code)}
+                padding={1}
+              />
             </div>
           </ScrollArea>
         </TabsContent>
