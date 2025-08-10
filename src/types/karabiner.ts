@@ -194,8 +194,8 @@ export interface Condition {
   // For variable_if and variable_unless conditions, use name and value directly
   name?: string
   value?: string | number | boolean
-  variable_if?: VariableCondition  // Deprecated - for backwards compatibility
-  variable_unless?: VariableCondition  // Deprecated - for backwards compatibility
+  variable_if?: VariableCondition // Deprecated - for backwards compatibility
+  variable_unless?: VariableCondition // Deprecated - for backwards compatibility
   keyboard_types?: string[]
 }
 
@@ -244,6 +244,7 @@ export interface Device {
   ignore?: boolean
   manipulate_caps_lock_led?: boolean
   simple_modifications?: SimpleModification[]
+  complex_modifications?: ComplexModifications
   treat_as_built_in_keyboard?: boolean
 }
 
@@ -573,7 +574,7 @@ export const TAP_HOLD_PRESETS: TapHoldPreset[] = [
     action: {
       type: 'layer-tap',
       tap: { type: 'key', key: 'spacebar' },
-      hold: { type: 'layer', layer: 1, layerAction: 'momentary' }
+      hold: { type: 'layer', layer: '1', layerAction: 'momentary' }
     },
     examples: ['Access symbols and numbers without moving hands']
   },

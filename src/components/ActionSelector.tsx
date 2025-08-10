@@ -25,7 +25,9 @@ export function ActionSelector({ currentAction, fromKey, onSave, onCancel }: Act
   const [tapAction, setTapAction] = useState<KeyAction>(
     currentAction?.tap || { type: 'key', key: '' }
   )
-  const [holdAction, setHoldAction] = useState<KeyAction>(currentAction?.hold || { type: 'key', key: '' })
+  const [holdAction, setHoldAction] = useState<KeyAction>(
+    currentAction?.hold || { type: 'key', key: '' }
+  )
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null)
 
   const handlePresetSelect = (presetId: string) => {
@@ -253,7 +255,7 @@ function ActionConfig({
     return (
       <Select
         value={action.layer?.toString() || '0'}
-        onValueChange={v => onChange({ ...action, type: 'layer', layer: parseInt(v) })}
+        onValueChange={v => onChange({ ...action, type: 'layer', layer: v })}
       >
         <SelectTrigger>
           <SelectValue placeholder="Select layer" />

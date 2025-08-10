@@ -1,8 +1,9 @@
-import { ArrowRight, Layers, Plus, Trash2, Edit2, Check, X } from 'lucide-react'
+import { ArrowRight, Check, Edit2, Layers, Plus, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
+import type { LayoutType } from '@/data/keyboardLayouts'
 import { useLayerStore } from '@/store/layers'
-import type { LayerMapping, LayerAction } from '@/types/karabiner'
-import { COMMON_KEY_CODES, MODIFIER_KEYS } from '@/types/karabiner'
+import type { LayerAction, LayerMapping } from '@/types/karabiner'
+import { COMMON_KEY_CODES } from '@/types/karabiner'
 import { LayerActionSelector } from './LayerActionSelector'
 import { LayerVisualKeyboard } from './LayerVisualKeyboard'
 import { Button } from './ui/button'
@@ -11,16 +12,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 
 interface LayerManagerProps {
-  keyboardLayout?: any
+  keyboardLayout?: LayoutType
 }
 
 export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProps) {
-  const { layerConfiguration, selectedLayerId, addLayer, deleteLayer, selectLayer, addMapping, updateMapping, deleteMapping, getMappingForKey, getLayerDisplayNumber } = useLayerStore()
+  const {
+    layerConfiguration,
+    selectedLayerId,
+    addLayer,
+    deleteLayer,
+    selectLayer,
+    addMapping,
+    updateMapping,
+    deleteMapping,
+    getMappingForKey,
+    getLayerDisplayNumber
+  } = useLayerStore()
   const [activeTab, setActiveTab] = useState(layerConfiguration.layers[0]?.id || '')
-  const [editingMapping, setEditingMapping] = useState<{ layerId: string; fromKey: string } | null>(null)
+  const [editingMapping, setEditingMapping] = useState<{ layerId: string; fromKey: string } | null>(
+    null
+  )
   const [isAddingMapping, setIsAddingMapping] = useState<{ layerId: string } | null>(null)
   const [newMappingKey, setNewMappingKey] = useState('')
-  const [inlineEditingKey, setInlineEditingKey] = useState<{ layerId: string; fromKey: string } | null>(null)
+  const [inlineEditingKey, setInlineEditingKey] = useState<{
+    layerId: string
+    fromKey: string
+  } | null>(null)
   const [inlineEditAction, setInlineEditAction] = useState<string>('')
 
   const handleAddLayer = () => {
@@ -37,7 +54,7 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
     const displayNum = getLayerDisplayNumber(layerId)
     // Can't delete Layer 0 (base layer)
     if (displayNum === 0) return
-    
+
     if (confirm(`Delete Layer ${displayNum}?`)) {
       deleteLayer(layerId)
       if (selectedLayerId === layerId) {
@@ -241,10 +258,7 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
             <TabsContent key={layer.id} value={layer.id} className="space-y-6">
               {/* Visual Keyboard */}
               <div className="flex justify-center">
-                <LayerVisualKeyboard 
-                  layerId={layer.id} 
-                  layout={keyboardLayout}
-                />
+                <LayerVisualKeyboard layerId={layer.id} layout={keyboardLayout} />
               </div>
 
               {/* Mapping List */}
@@ -257,11 +271,7 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
                         Layer {index} Mappings
                       </h3>
                     </div>
-                    <Button
-                      size="sm"
-                      onClick={() => handleAddMapping(layer.id)}
-                      className="gap-2"
-                    >
+                    <Button size="sm" onClick={() => handleAddMapping(layer.id)} className="gap-2">
                       <Plus className="h-3 w-3" />
                       Add Mapping
                     </Button>
@@ -271,11 +281,14 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
                 <div className="divide-y divide-gray-200 dark:divide-gray-700">
                   {layer.mappings.length === 0 ? (
                     <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-                      No mappings configured. Click a key on the keyboard or "Add Mapping" to create one.
+                      No mappings configured. Click a key on the keyboard or "Add Mapping" to create
+                      one.
                     </div>
                   ) : (
                     layer.mappings.map(mapping => {
-                      const isEditing = inlineEditingKey?.layerId === layer.id && inlineEditingKey?.fromKey === mapping.from
+                      const isEditing =
+                        inlineEditingKey?.layerId === layer.id &&
+                        inlineEditingKey?.fromKey === mapping.from
                       return (
                         <div
                           key={mapping.from}
@@ -299,14 +312,18 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
                                     <SelectContent>
                                       <SelectItem value="none">None</SelectItem>
                                       {/* Common Keys */}
-                                      <div className="px-2 py-1 text-xs font-semibold text-gray-500">Keys</div>
+                                      <div className="px-2 py-1 text-xs font-semibold text-gray-500">
+                                        Keys
+                                      </div>
                                       {COMMON_KEY_CODES.slice(0, 10).map(key => (
                                         <SelectItem key={key} value={key}>
                                           {key.replace(/_/g, ' ').toUpperCase()}
                                         </SelectItem>
                                       ))}
                                       {/* Layer Actions */}
-                                      <div className="px-2 py-1 text-xs font-semibold text-gray-500">Layer Actions</div>
+                                      <div className="px-2 py-1 text-xs font-semibold text-gray-500">
+                                        Layer Actions
+                                      </div>
                                       {layerConfiguration.layers.map((l, idx) => (
                                         <div key={l.id}>
                                           {idx !== 0 && (
@@ -322,10 +339,13 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
                                         </div>
                                       ))}
                                       {/* Mod-Tap */}
-                                      <div className="px-2 py-1 text-xs font-semibold text-gray-500">Mod-Tap</div>
+                                      <div className="px-2 py-1 text-xs font-semibold text-gray-500">
+                                        Mod-Tap
+                                      </div>
                                       {['a', 's', 'd', 'f'].map(key => (
                                         <SelectItem key={`mod_${key}`} value={`mod_${key}`}>
-                                          MT({key.toUpperCase()}) - Tap {key.toUpperCase()} / Hold Ctrl
+                                          MT({key.toUpperCase()}) - Tap {key.toUpperCase()} / Hold
+                                          Ctrl
                                         </SelectItem>
                                       ))}
                                     </SelectContent>
@@ -348,12 +368,13 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
                                   </Button>
                                 </div>
                               ) : (
-                                <span 
-                                  className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                                <button
+                                  type="button"
+                                  className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 text-left"
                                   onClick={() => handleInlineEdit(layer.id, mapping.from)}
                                 >
                                   {getActionDescription(mapping.action)}
-                                </span>
+                                </button>
                               )}
                             </div>
                           </div>
@@ -397,10 +418,14 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                <label
+                  htmlFor="from-key-input"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                >
                   From Key
                 </label>
                 <input
+                  id="from-key-input"
                   type="text"
                   className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                   placeholder="Enter key code (e.g., caps_lock, a, f1)"
@@ -429,7 +454,9 @@ export function LayerManager({ keyboardLayout = 'macbook-us' }: LayerManagerProp
             </DialogHeader>
             <LayerActionSelector
               fromKey={editingMapping.fromKey}
-              currentAction={getMappingForKey(editingMapping.layerId, editingMapping.fromKey)?.action}
+              currentAction={
+                getMappingForKey(editingMapping.layerId, editingMapping.fromKey)?.action
+              }
               onSave={handleSaveEditMapping}
               onCancel={() => setEditingMapping(null)}
             />

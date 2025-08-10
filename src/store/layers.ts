@@ -53,15 +53,15 @@ export const useLayerStore = create<LayerStore>()(
         const newLayerId = uuidv4()
         const state = get()
         const displayNumber = state.layerConfiguration.layers.length
-        
+
         const newLayer: Layer = {
           id: newLayerId,
           name: `Layer ${displayNumber}`,
-          color: partialLayer?.color || '#' + Math.floor(Math.random() * 16777215).toString(16),
+          color: partialLayer?.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
           description: partialLayer?.description || '',
           mappings: partialLayer?.mappings || []
         }
-        
+
         set(state => ({
           layerConfiguration: {
             ...state.layerConfiguration,
@@ -87,16 +87,17 @@ export const useLayerStore = create<LayerStore>()(
           }
 
           const newLayers = state.layerConfiguration.layers.filter(l => l.id !== layerId)
-          
+
           // Renumber remaining layers
           const renumberedLayers = newLayers.map((layer, index) => ({
             ...layer,
             name: `Layer ${index}`
           }))
 
-          const newSelectedId = state.selectedLayerId === layerId 
-            ? state.layerConfiguration.baseLayer! 
-            : state.selectedLayerId
+          const newSelectedId =
+            state.selectedLayerId === layerId
+              ? state.layerConfiguration.baseLayer || baseLayerId
+              : state.selectedLayerId
 
           return {
             layerConfiguration: {

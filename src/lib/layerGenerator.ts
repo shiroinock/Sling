@@ -1,4 +1,5 @@
 import type {
+  Condition,
   FromEvent,
   KeyAction,
   Layer,
@@ -9,7 +10,11 @@ import type {
   Rule,
   ToEvent
 } from '@/types/karabiner'
-import { getLayerVariableName } from '@/types/karabiner'
+
+// Helper function to get layer variable name
+function getLayerVariableName(layerId: string): string {
+  return `layer_${layerId}`
+}
 
 /**
  * Generate Karabiner Complex Modifications rules from layer configuration
@@ -19,7 +24,7 @@ export function generateLayerRules(layerConfig: LayerConfiguration): Rule[] {
 
   // Generate rules for each layer
   for (const layer of layerConfig.layers) {
-    if (layer.id === 0) {
+    if (layer.id === '0') {
       // Base layer doesn't need conditions, but still process mod-tap and layer-tap
       rules.push(...generateBaseLayerRules(layer))
     } else {
@@ -70,7 +75,7 @@ function generateHigherLayerRules(layer: Layer): Rule[] {
           type: 'variable_if',
           name: layerVariable,
           value: 1
-        } as any // Type assertion needed for variable_if/variable_unless
+        } as Condition
       ]
     })
 

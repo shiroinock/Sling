@@ -5,8 +5,8 @@ import { getLayout } from '@/data/keyboardLayouts'
 import { cn } from '@/lib/utils'
 import { useLayerStore } from '@/store/layers'
 import type { LayerMapping } from '@/types/karabiner'
-import { LayerActionSelector } from './LayerActionSelector'
 import { Key } from './keyboard/Key'
+import { LayerActionSelector } from './LayerActionSelector'
 import { Badge } from './ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 
@@ -24,12 +24,11 @@ export function LayerVisualKeyboard({
   onMappingChange
 }: LayerVisualKeyboardProps) {
   const keyboardLayout = getLayout(layout)
-  const { layerConfiguration, addMapping, updateMapping, deleteMapping, getMappingForKey, getLayerDisplayNumber } =
+  const { layerConfiguration, addMapping, updateMapping, getMappingForKey, getLayerDisplayNumber } =
     useLayerStore()
 
   const [selectedKey, setSelectedKey] = useState<string | null>(null)
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false)
-  const [hoveredKey, setHoveredKey] = useState<string | null>(null)
 
   const layer = layerConfiguration.layers.find(l => l.id === layerId)
   if (!layer) return null
@@ -64,13 +63,6 @@ export function LayerVisualKeyboard({
     setIsActionDialogOpen(false)
     setSelectedKey(null)
     onMappingChange?.()
-  }
-
-  const handleDeleteMapping = (keyCode: string) => {
-    if (confirm(`Delete mapping for ${keyCode}?`)) {
-      deleteMapping(layerId, keyCode)
-      onMappingChange?.()
-    }
   }
 
   const getKeyLabel = (mapping: LayerMapping): string => {
@@ -153,7 +145,7 @@ export function LayerVisualKeyboard({
 
             return (
               <div
-                key={`row-${rowIndex}`}
+                key={`row-${row.y || rowIndex}-${row.keys[0]?.keyCode || row.keys[0]?.label || rowIndex}`}
                 className="absolute flex gap-1"
                 style={{
                   top: `${rowY}px`,
@@ -164,22 +156,23 @@ export function LayerVisualKeyboard({
                   const keyX =
                     keyData.x !== undefined
                       ? keyData.x * 60
-                      : row.keys.slice(0, keyIndex).reduce((acc, k) => acc + (k.width || 1) * 60 + 1, 0) // +1 for gap
-                  
-                  const keyCode = keyData.keyCode || keyData.label.toLowerCase().replace(/\s+/g, '_')
+                      : row.keys
+                          .slice(0, keyIndex)
+                          .reduce((acc, k) => acc + (k.width || 1) * 60 + 1, 0) // +1 for gap
+
+                  const keyCode =
+                    keyData.keyCode || keyData.label.toLowerCase().replace(/\s+/g, '_')
                   const mapping = mappingsMap.get(keyCode)
                   const badgeInfo = mapping ? getKeyBadgeType(mapping) : null
 
                   return (
                     <div
-                      key={`key-${keyCode}-${keyIndex}`}
+                      key={`key-${keyCode}`}
                       className="absolute"
                       style={{
                         left: `${keyX}px`,
                         top: keyData.y ? `${keyData.y * 60}px` : 0
                       }}
-                      onMouseEnter={() => setHoveredKey(keyCode)}
-                      onMouseLeave={() => setHoveredKey(null)}
                     >
                       <Key
                         keyData={keyData}
@@ -202,20 +195,6 @@ export function LayerVisualKeyboard({
                             <badgeInfo.icon className="h-2.5 w-2.5 text-white" />
                           </div>
                         </div>
-                      )}
-
-                      {/* Delete button on hover */}
-                      {mapping && hoveredKey === keyCode && (
-                        <button
-                          type="button"
-                          className="absolute -top-2 -right-2 z-20 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                          onClick={e => {
-                            e.stopPropagation()
-                            handleDeleteMapping(keyCode)
-                          }}
-                        >
-                          ×
-                        </button>
                       )}
                     </div>
                   )

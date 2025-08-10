@@ -1,4 +1,4 @@
-import type { LayerConfiguration, LayerMapping, Manipulator, Rule } from '@/types/karabiner'
+import type { LayerConfiguration, Manipulator, Rule } from '@/types/karabiner'
 
 /**
  * Convert layer configuration to Karabiner complex modification rules
@@ -9,22 +9,22 @@ import type { LayerConfiguration, LayerMapping, Manipulator, Rule } from '@/type
  */
 export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): Rule[] {
   const rules: Rule[] = []
-  
+
   // Create a map from layer ID to index for simpler variable names
   const layerIndexMap = new Map<string, number>()
   layerConfig.layers.forEach((layer, index) => {
     layerIndexMap.set(layer.id, index)
   })
-  
+
   // Helper to get simple variable name for layers
   const getSimpleLayerVariableName = (layerId: string): string => {
     const index = layerIndexMap.get(layerId) ?? 0
     return `layer_${index}`
   }
-  
+
   // First, collect all layer activation manipulators (layer-tap, layer-momentary, layer-toggle)
   const activationManipulators: Manipulator[] = []
-  
+
   layerConfig.layers.forEach(sourceLayer => {
     sourceLayer.mappings.forEach(mapping => {
       // Layer-tap implementation
@@ -66,7 +66,7 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
           })
         }
       }
-      
+
       // Layer-momentary implementation
       else if (mapping.action.type === 'layer-momentary') {
         const targetLayerId = mapping.action.hold?.layer || mapping.action.tap?.layer
@@ -98,7 +98,7 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
           })
         }
       }
-      
+
       // Layer-toggle implementation
       else if (mapping.action.type === 'layer-toggle') {
         const targetLayerId = mapping.action.tap?.layer || mapping.action.hold?.layer
@@ -128,7 +128,7 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
               }
             ]
           })
-          
+
           // Toggle OFF rule (when layer is on)
           activationManipulators.push({
             type: 'basic',
@@ -160,7 +160,7 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
       }
     })
   })
-  
+
   // Add layer activation rule if there are any activators
   if (activationManipulators.length > 0) {
     rules.push({
@@ -168,21 +168,23 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
       manipulators: activationManipulators
     })
   }
-  
+
   // Then add layer-specific mappings (non-base layers first, in reverse order)
   // Skip layer 0 (base layer) for now
   for (let i = layerConfig.layers.length - 1; i > 0; i--) {
     const layer = layerConfig.layers[i]
     const layerManipulators: Manipulator[] = []
-    
+
     layer.mappings.forEach(mapping => {
       // Skip layer activation mappings - they're handled above
-      if (mapping.action.type === 'layer-tap' || 
-          mapping.action.type === 'layer-momentary' || 
-          mapping.action.type === 'layer-toggle') {
+      if (
+        mapping.action.type === 'layer-tap' ||
+        mapping.action.type === 'layer-momentary' ||
+        mapping.action.type === 'layer-toggle'
+      ) {
         return
       }
-      
+
       if (mapping.action.type === 'simple' && mapping.action.tap?.key) {
         layerManipulators.push({
           type: 'basic',
@@ -205,9 +207,11 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
             }
           ]
         })
-      } else if (mapping.action.type === 'mod-tap' && 
-                 mapping.action.tap?.key && 
-                 mapping.action.hold?.modifiers?.length) {
+      } else if (
+        mapping.action.type === 'mod-tap' &&
+        mapping.action.tap?.key &&
+        mapping.action.hold?.modifiers?.length
+      ) {
         layerManipulators.push({
           type: 'basic',
           from: {
@@ -238,7 +242,7 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
         })
       }
     })
-    
+
     if (layerManipulators.length > 0) {
       rules.push({
         description: `Layer ${i}`,
@@ -246,21 +250,23 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
       })
     }
   }
-  
+
   // Finally, add base layer (layer 0) mappings without layer conditions
   // Only include simple and mod-tap mappings, not layer switches
   const baseLayer = layerConfig.layers[0]
   if (baseLayer) {
     const baseManipulators: Manipulator[] = []
-    
+
     baseLayer.mappings.forEach(mapping => {
       // Skip layer activation mappings
-      if (mapping.action.type === 'layer-tap' || 
-          mapping.action.type === 'layer-momentary' || 
-          mapping.action.type === 'layer-toggle') {
+      if (
+        mapping.action.type === 'layer-tap' ||
+        mapping.action.type === 'layer-momentary' ||
+        mapping.action.type === 'layer-toggle'
+      ) {
         return
       }
-      
+
       if (mapping.action.type === 'simple' && mapping.action.tap?.key) {
         baseManipulators.push({
           type: 'basic',
@@ -276,9 +282,11 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
             }
           ]
         })
-      } else if (mapping.action.type === 'mod-tap' && 
-                 mapping.action.tap?.key && 
-                 mapping.action.hold?.modifiers?.length) {
+      } else if (
+        mapping.action.type === 'mod-tap' &&
+        mapping.action.tap?.key &&
+        mapping.action.hold?.modifiers?.length
+      ) {
         baseManipulators.push({
           type: 'basic',
           from: {
@@ -302,7 +310,7 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
         })
       }
     })
-    
+
     if (baseManipulators.length > 0) {
       rules.push({
         description: 'Base Layer',
@@ -310,6 +318,6 @@ export function convertLayersToKarabinerRules(layerConfig: LayerConfiguration): 
       })
     }
   }
-  
+
   return rules
 }

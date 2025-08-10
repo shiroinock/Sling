@@ -1,13 +1,13 @@
 import { Keyboard, Layers, MousePointer, ToggleLeft, X } from 'lucide-react'
 import { useState } from 'react'
 import { useLayerStore } from '@/store/layers'
-import type { KeyAction, LayerAction } from '@/types/karabiner'
+import type { LayerAction } from '@/types/karabiner'
 import { COMMON_KEY_CODES, MODIFIER_KEYS } from '@/types/karabiner'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 
 interface LayerActionSelectorProps {
   currentAction?: LayerAction
@@ -16,29 +16,30 @@ interface LayerActionSelectorProps {
   onCancel: () => void
 }
 
-export function LayerActionSelector({ currentAction, fromKey, onSave, onCancel }: LayerActionSelectorProps) {
+export function LayerActionSelector({ currentAction, onSave, onCancel }: LayerActionSelectorProps) {
   const [actionType, setActionType] = useState<LayerAction['type']>(currentAction?.type || 'simple')
   const [tapKey, setTapKey] = useState<string>(currentAction?.tap?.key || 'none')
-  const [holdKey, setHoldKey] = useState<string>(currentAction?.hold?.key || 'none')
   const [holdModifiers, setHoldModifiers] = useState<string[]>(currentAction?.hold?.modifiers || [])
   const [holdLayer, setHoldLayer] = useState<string>(currentAction?.hold?.layer || '')
   const [tapLayer, setTapLayer] = useState<string>(currentAction?.tap?.layer || '')
-  
+
   const { layerConfiguration, getLayerDisplayNumber } = useLayerStore()
 
   const handleSave = () => {
     const action: LayerAction = {
       type: actionType,
-      tap: actionType !== 'layer-momentary' 
-        ? actionType === 'layer-toggle'
-          ? { type: 'layer', layer: tapLayer }
-          : { type: 'key', key: tapKey === 'none' ? '' : tapKey }
-        : undefined,
-      hold: actionType !== 'simple' 
-        ? actionType === 'mod-tap'
-          ? { type: 'modifier', modifiers: holdModifiers }
-          : { type: 'layer', layer: holdLayer || tapLayer }
-        : undefined
+      tap:
+        actionType !== 'layer-momentary'
+          ? actionType === 'layer-toggle'
+            ? { type: 'layer', layer: tapLayer }
+            : { type: 'key', key: tapKey === 'none' ? '' : tapKey }
+          : undefined,
+      hold:
+        actionType !== 'simple'
+          ? actionType === 'mod-tap'
+            ? { type: 'modifier', modifiers: holdModifiers }
+            : { type: 'layer', layer: holdLayer || tapLayer }
+          : undefined
     }
     onSave(action)
   }
@@ -51,9 +52,7 @@ export function LayerActionSelector({ currentAction, fromKey, onSave, onCancel }
   }
 
   const toggleModifier = (mod: string) => {
-    setHoldModifiers(prev =>
-      prev.includes(mod) ? prev.filter(m => m !== mod) : [...prev, mod]
-    )
+    setHoldModifiers(prev => (prev.includes(mod) ? prev.filter(m => m !== mod) : [...prev, mod]))
   }
 
   return (
@@ -87,9 +86,7 @@ export function LayerActionSelector({ currentAction, fromKey, onSave, onCancel }
       {/* Tap Action */}
       {actionType !== 'layer-momentary' && (
         <div className="space-y-2">
-          <Label>
-            {actionType === 'layer-toggle' ? 'Toggle Layer' : 'When Tapped'}
-          </Label>
+          <Label>{actionType === 'layer-toggle' ? 'Toggle Layer' : 'When Tapped'}</Label>
           {actionType === 'layer-toggle' ? (
             <Select value={tapLayer} onValueChange={setTapLayer}>
               <SelectTrigger>
@@ -125,19 +122,23 @@ export function LayerActionSelector({ currentAction, fromKey, onSave, onCancel }
       )}
 
       {/* Hold Action */}
-      {(actionType === 'mod-tap' || actionType === 'layer-tap' || actionType === 'layer-momentary') && (
+      {(actionType === 'mod-tap' ||
+        actionType === 'layer-tap' ||
+        actionType === 'layer-momentary') && (
         <div className="space-y-2">
           <Label>When Held</Label>
           {actionType === 'mod-tap' ? (
             <div className="space-y-2">
               <div className="flex flex-wrap gap-2">
-                {MODIFIER_KEYS.filter(m => !['any', 'command', 'control', 'option', 'shift'].includes(m)).map(mod => (
+                {MODIFIER_KEYS.filter(
+                  m => !['any', 'command', 'control', 'option', 'shift'].includes(m)
+                ).map(mod => (
                   <Badge
                     key={mod}
                     variant="outline"
                     className={`cursor-pointer transition-all ${
-                      holdModifiers.includes(mod) 
-                        ? 'bg-blue-500 text-white border-blue-600 hover:bg-blue-600' 
+                      holdModifiers.includes(mod)
+                        ? 'bg-blue-500 text-white border-blue-600 hover:bg-blue-600'
                         : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}
                     onClick={() => toggleModifier(mod)}
@@ -180,7 +181,12 @@ export function LayerActionSelector({ currentAction, fromKey, onSave, onCancel }
                 Tap → {tapKey === 'none' ? '(none)' : tapKey.replace(/_/g, ' ').toUpperCase()}
               </p>
               <p className="text-gray-600 dark:text-gray-400">
-                Hold → {holdModifiers.length > 0 ? holdModifiers.map(m => m.replace('left_', '').replace('right_', '').toUpperCase()).join(' + ') : '(no modifiers)'}
+                Hold →{' '}
+                {holdModifiers.length > 0
+                  ? holdModifiers
+                      .map(m => m.replace('left_', '').replace('right_', '').toUpperCase())
+                      .join(' + ')
+                  : '(no modifiers)'}
               </p>
             </>
           )}
@@ -212,9 +218,7 @@ export function LayerActionSelector({ currentAction, fromKey, onSave, onCancel }
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={handleSave}>
-          Save
-        </Button>
+        <Button onClick={handleSave}>Save</Button>
       </div>
     </div>
   )

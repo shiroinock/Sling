@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import type { LayoutType } from '@/data/keyboardLayouts'
 import { convertLayersToKarabinerRules } from '@/lib/layerToKarabiner'
 import { useLayerStore } from '@/store/layers'
+import type { Profile } from '@/types/karabiner'
 import { cn } from '../lib/utils'
 import { useKarabinerStore } from '../store/karabiner'
 import { BackupManager } from './BackupManager'
@@ -13,7 +14,6 @@ import { DeviceManager } from './DeviceManager'
 import { DeviceTargetSelector } from './DeviceTargetSelector'
 import { ImportExportHistory } from './ImportExportHistory'
 import { LayerManager } from './LayerManager'
-import { LayerVisualKeyboard } from './LayerVisualKeyboard'
 import { ProfileTabs } from './ProfileTabs'
 import { UnifiedSimpleModifications } from './UnifiedSimpleModifications'
 
@@ -24,7 +24,7 @@ const KEYBOARD_LAYOUT_STORAGE_KEY = 'sling-keyboard-layout'
 export function ConfigurationEditor() {
   const { config, reset, selectedRuleIndex, selectedProfileIndex, selectRule, addHistoryEntry } =
     useKarabinerStore()
-  const { selectedLayerId, layerConfiguration } = useLayerStore()
+  const { layerConfiguration } = useLayerStore()
   const [activeTab, setActiveTab] = useState<TabType>('simple')
   const [isComplexEditorOpen, setIsComplexEditorOpen] = useState(false)
   const [keyboardLayout, setKeyboardLayout] = useState<LayoutType>(() => {
@@ -46,12 +46,12 @@ export function ConfigurationEditor() {
   const handleExport = () => {
     // Clone the config to avoid mutating the original
     const exportConfig = JSON.parse(JSON.stringify(config))
-    
+
     // Add layer rules to each profile's complex_modifications
     if (layerConfiguration.layers.length > 0) {
       const layerRules = convertLayersToKarabinerRules(layerConfiguration)
-      
-      exportConfig.profiles.forEach((profile: any) => {
+
+      exportConfig.profiles.forEach((profile: Profile) => {
         if (!profile.complex_modifications) {
           profile.complex_modifications = { rules: [] }
         }
@@ -62,7 +62,7 @@ export function ConfigurationEditor() {
         profile.complex_modifications.rules.unshift(...layerRules)
       })
     }
-    
+
     const blob = new Blob([JSON.stringify(exportConfig, null, 2)], {
       type: 'application/json'
     })
