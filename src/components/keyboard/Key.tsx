@@ -99,7 +99,7 @@ export function Key({
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsHovered(true)
-    
+
     // Check if tooltip would overflow on the left
     const rect = e.currentTarget.getBoundingClientRect()
     if (rect.left < 200) {
@@ -107,7 +107,7 @@ export function Key({
     } else {
       setTooltipPosition('top')
     }
-    
+
     onMouseEnter?.(keyCode)
   }
 
@@ -265,8 +265,10 @@ export function Key({
       </button>
 
       {/* Custom Tooltip */}
-      {showTooltip && tooltip && isHovered && (
-        tooltipPosition === 'top' ? (
+      {showTooltip &&
+        tooltip &&
+        isHovered &&
+        (tooltipPosition === 'top' ? (
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 dark:bg-gray-900 text-white text-xs rounded whitespace-nowrap z-20 pointer-events-none">
             {tooltip}
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 dark:border-t-gray-900" />
@@ -276,8 +278,7 @@ export function Key({
             {tooltip}
             <div className="absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800 dark:border-r-gray-900" />
           </div>
-        )
-      )}
+        ))}
     </div>
   )
 }
