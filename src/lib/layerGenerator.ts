@@ -101,30 +101,38 @@ function generateManipulatorsForMapping(mapping: LayerMapping): Manipulator[] {
 
   switch (action.type) {
     case 'simple':
-      // Simple key remapping
-      if (action.tap) {
+      // Simple key remapping - skip if no valid key
+      if (action.tap?.key) {
         manipulators.push(generateSimpleManipulator(mapping.from, action.tap))
       }
       break
 
     case 'mod-tap':
-      // Tap for key, hold for modifier
-      manipulators.push(generateModTapManipulator(mapping.from, action))
+      // Tap for key, hold for modifier - skip if no valid tap key
+      if (action.tap?.key && action.hold?.modifiers?.length) {
+        manipulators.push(generateModTapManipulator(mapping.from, action))
+      }
       break
 
     case 'layer-tap':
-      // Tap for key, hold for layer
-      manipulators.push(generateLayerTapManipulator(mapping.from, action))
+      // Tap for key, hold for layer - skip if no valid tap key or layer
+      if (action.tap?.key && action.hold?.layer) {
+        manipulators.push(generateLayerTapManipulator(mapping.from, action))
+      }
       break
 
     case 'layer-momentary':
-      // Hold to activate layer temporarily
-      manipulators.push(generateLayerMomentaryManipulator(mapping.from, action))
+      // Hold to activate layer temporarily - skip if no valid layer
+      if (action.hold?.layer || action.tap?.layer) {
+        manipulators.push(generateLayerMomentaryManipulator(mapping.from, action))
+      }
       break
 
     case 'layer-toggle':
-      // Toggle layer on/off
-      manipulators.push(generateLayerToggleManipulator(mapping.from, action))
+      // Toggle layer on/off - skip if no valid layer
+      if (action.tap?.layer || action.hold?.layer) {
+        manipulators.push(generateLayerToggleManipulator(mapping.from, action))
+      }
       break
   }
 

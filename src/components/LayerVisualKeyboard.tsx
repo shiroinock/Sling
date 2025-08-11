@@ -29,15 +29,6 @@ export function LayerVisualKeyboard({
   const layer = layerConfiguration.layers.find(l => l.id === layerId)
   if (!layer) return null
 
-  // Convert layer mappings to simple modifications format for visualization
-  const simpleModifications: SimpleModification[] = layer.mappings.map(mapping => {
-    const toKeyCode = getKeyCodeFromMapping(mapping)
-    return {
-      from: { key_code: mapping.from },
-      to: [{ key_code: toKeyCode }]
-    }
-  })
-
   const handleKeyClick = (keyCode: string) => {
     console.log('Key clicked:', keyCode)
     setSelectedKey(keyCode)
@@ -64,32 +55,52 @@ export function LayerVisualKeyboard({
     onMappingChange?.()
   }
 
-  const getKeyCodeFromMapping = (mapping: LayerMapping): string => {
+  // Create SimpleModifications for ALL mappings with appropriate display labels
+  const simpleModifications: SimpleModification[] = layer.mappings.map(mapping => {
     const action = mapping.action
+    let toKeyCode = ''
 
+    // Determine what to display as the mapped key
     switch (action.type) {
       case 'simple':
-        return action.tap?.key || mapping.from
-      case 'mod-tap':
-        return `${action.tap?.key || '?'}/${action.hold?.modifiers?.join('+') || '?'}`
+        toKeyCode = action.tap?.key || mapping.from
+        break
+      case 'mod-tap': {
+        const tapKey = action.tap?.key || '?'
+        const modifiers =
+          action.hold?.modifiers
+            ?.map(m => m.replace('left_', '').replace('right_', '').charAt(0).toUpperCase())
+            .join('') || '?'
+        toKeyCode = `${tapKey}/${modifiers}`
+        break
+      }
       case 'layer-tap': {
+        const tapKey = action.tap?.key || '?'
         const layerNum = action.hold?.layer ? getLayerDisplayNumber(action.hold.layer) : '?'
-        return `${action.tap?.key || '?'}/L${layerNum}`
+        toKeyCode = `${tapKey}/L${layerNum}`
+        break
       }
       case 'layer-momentary': {
         const layerId = action.hold?.layer ?? action.tap?.layer
         const layerNum = layerId ? getLayerDisplayNumber(layerId) : '?'
-        return `MO(${layerNum})`
+        toKeyCode = `MO(${layerNum})`
+        break
       }
       case 'layer-toggle': {
         const layerId = action.tap?.layer ?? action.hold?.layer
         const layerNum = layerId ? getLayerDisplayNumber(layerId) : '?'
-        return `TG(${layerNum})`
+        toKeyCode = `TG(${layerNum})`
+        break
       }
       default:
-        return mapping.from
+        toKeyCode = mapping.from
     }
-  }
+
+    return {
+      from: { key_code: mapping.from },
+      to: [{ key_code: toKeyCode }]
+    }
+  })
 
   return (
     <>

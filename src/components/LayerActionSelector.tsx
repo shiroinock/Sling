@@ -26,13 +26,47 @@ export function LayerActionSelector({ currentAction, onSave, onCancel }: LayerAc
   const { layerConfiguration, getLayerDisplayNumber } = useLayerStore()
 
   const handleSave = () => {
+    // Validation
+    if (actionType === 'simple' && tapKey === 'none') {
+      alert('Please select a key for the simple mapping')
+      return
+    }
+    if (actionType === 'mod-tap') {
+      if (tapKey === 'none') {
+        alert('Please select a tap key for the mod-tap')
+        return
+      }
+      if (holdModifiers.length === 0) {
+        alert('Please select at least one modifier for the mod-tap')
+        return
+      }
+    }
+    if (actionType === 'layer-tap') {
+      if (tapKey === 'none') {
+        alert('Please select a tap key for the layer-tap')
+        return
+      }
+      if (!holdLayer) {
+        alert('Please select a layer for the layer-tap')
+        return
+      }
+    }
+    if (actionType === 'layer-momentary' && !holdLayer) {
+      alert('Please select a layer for the momentary layer')
+      return
+    }
+    if (actionType === 'layer-toggle' && !tapLayer) {
+      alert('Please select a layer to toggle')
+      return
+    }
+
     const action: LayerAction = {
       type: actionType,
       tap:
         actionType !== 'layer-momentary'
           ? actionType === 'layer-toggle'
             ? { type: 'layer', layer: tapLayer }
-            : { type: 'key', key: tapKey === 'none' ? '' : tapKey }
+            : { type: 'key', key: tapKey }
           : undefined,
       hold:
         actionType !== 'simple'
