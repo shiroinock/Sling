@@ -69,12 +69,16 @@ export function LayerVisualKeyboard({
 
     switch (action.type) {
       case 'simple':
-        return action.tap?.key || mapping.from
-      case 'mod-tap':
-        return `${action.tap?.key || '?'}/${action.hold?.modifiers?.join('+') || '?'}`
+        return action.tap?.key || '(unmapped)'
+      case 'mod-tap': {
+        const tapKey = action.tap?.key || '(no key)'
+        const modifiers = action.hold?.modifiers?.join('+') || '(no mods)'
+        return `${tapKey}/${modifiers}`
+      }
       case 'layer-tap': {
+        const tapKey = action.tap?.key || '(no key)'
         const layerNum = action.hold?.layer ? getLayerDisplayNumber(action.hold.layer) : '?'
-        return `${action.tap?.key || '?'}/L${layerNum}`
+        return `${tapKey}/L${layerNum}`
       }
       case 'layer-momentary': {
         const layerId = action.hold?.layer ?? action.tap?.layer
@@ -87,7 +91,7 @@ export function LayerVisualKeyboard({
         return `TG(${layerNum})`
       }
       default:
-        return mapping.from
+        return '(invalid)'
     }
   }
 
