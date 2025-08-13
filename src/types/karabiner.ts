@@ -147,6 +147,7 @@ export interface Rule {
 
 export interface Manipulator {
   type: 'basic' | 'mouse_motion_to_scroll'
+  description?: string
   from: FromEvent
   to?: ToEvent[]
   to_if_alone?: ToEvent[]
