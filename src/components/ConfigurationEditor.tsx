@@ -7,23 +7,20 @@ import { useLayerStore } from '@/store/layers'
 import type { Profile } from '@/types/karabiner'
 import { cn } from '../lib/utils'
 import { useKarabinerStore } from '../store/karabiner'
-import { BackupManager } from './BackupManager'
 import { ComplexModificationEditor } from './ComplexModificationEditor'
 import { ComplexModificationsList } from './ComplexModificationsList'
 import { DeviceManager } from './DeviceManager'
 import { DeviceTargetSelector } from './DeviceTargetSelector'
-import { ImportExportHistory } from './ImportExportHistory'
 import { LayerManager } from './LayerManager'
 import { ProfileTabs } from './ProfileTabs'
 import { UnifiedSimpleModifications } from './UnifiedSimpleModifications'
 
-type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'layers' | 'history' | 'backup'
+type TabType = 'simple' | 'complex' | 'function_keys' | 'devices' | 'layers'
 
 const KEYBOARD_LAYOUT_STORAGE_KEY = 'sling-keyboard-layout'
 
 export function ConfigurationEditor() {
-  const { config, reset, selectedRuleIndex, selectedProfileIndex, selectRule, addHistoryEntry } =
-    useKarabinerStore()
+  const { config, reset, selectedRuleIndex, selectedProfileIndex, selectRule } = useKarabinerStore()
   const { layerConfiguration } = useLayerStore()
   const [activeTab, setActiveTab] = useState<TabType>('simple')
   const [isComplexEditorOpen, setIsComplexEditorOpen] = useState(false)
@@ -68,17 +65,6 @@ export function ConfigurationEditor() {
     })
     const fileName = `karabiner-${new Date().toISOString().split('T')[0]}.json`
     saveAs(blob, fileName)
-
-    // Add export history entry
-    addHistoryEntry({
-      type: 'export',
-      fileName,
-      profileCount: config?.profiles.length,
-      ruleCount: config?.profiles.reduce(
-        (acc, profile) => acc + (profile.complex_modifications?.rules?.length || 0),
-        0
-      )
-    })
   }
 
   const handleEditComplexRule = (index: number) => {
@@ -91,9 +77,7 @@ export function ConfigurationEditor() {
     { id: 'complex', label: 'Complex Modifications' },
     { id: 'layers', label: 'Layers (Beta)' },
     { id: 'function_keys', label: 'Function Keys' },
-    { id: 'devices', label: 'Devices' },
-    { id: 'backup', label: 'Backup' },
-    { id: 'history', label: 'History' }
+    { id: 'devices', label: 'Devices' }
   ]
 
   return (
@@ -240,10 +224,6 @@ export function ConfigurationEditor() {
             )}
 
             {activeTab === 'devices' && <DeviceManager />}
-
-            {activeTab === 'backup' && <BackupManager />}
-
-            {activeTab === 'history' && <ImportExportHistory />}
           </div>
         </div>
       </div>

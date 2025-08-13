@@ -2,22 +2,12 @@ import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import type { KarabinerConfig, Profile, Rule, SimpleModification } from '@/types/karabiner'
 
-interface ImportExportHistory {
-  id: string
-  type: 'import' | 'export'
-  fileName: string
-  timestamp: number
-  profileCount?: number
-  ruleCount?: number
-}
-
 interface KarabinerState {
   config: KarabinerConfig | null
   selectedProfileIndex: number
   selectedRuleIndex: number | null
   error: string | null
   isDirty: boolean
-  importExportHistory: ImportExportHistory[]
 
   setConfig: (config: KarabinerConfig) => void
   updateConfig: (config: KarabinerConfig) => void
@@ -37,9 +27,6 @@ interface KarabinerState {
   updateSimpleModification: (index: number, modification: SimpleModification) => void
   deleteSimpleModification: (index: number) => void
 
-  addHistoryEntry: (entry: Omit<ImportExportHistory, 'id' | 'timestamp'>) => void
-  clearHistory: () => void
-
   reset: () => void
 }
 
@@ -48,8 +35,7 @@ const initialState = {
   selectedProfileIndex: 0,
   selectedRuleIndex: null,
   error: null,
-  isDirty: false,
-  importExportHistory: []
+  isDirty: false
 }
 
 export const useKarabinerStore = create<KarabinerState>()(
@@ -59,8 +45,7 @@ export const useKarabinerStore = create<KarabinerState>()(
         ...initialState,
 
         setConfig: config =>
-          set(state => {
-            // Add import history entry
+          set(() => {
             if (config) {
               // Find the default profile (the one with selected: true)
               const defaultProfileIndex = config.profiles.findIndex(
@@ -68,24 +53,12 @@ export const useKarabinerStore = create<KarabinerState>()(
               )
               const selectedProfileIndex = defaultProfileIndex >= 0 ? defaultProfileIndex : 0
 
-              const newHistory: ImportExportHistory = {
-                id: crypto.randomUUID(),
-                type: 'import',
-                fileName: 'karabiner.json',
-                timestamp: Date.now(),
-                profileCount: config.profiles.length,
-                ruleCount: config.profiles.reduce(
-                  (acc, profile) => acc + (profile.complex_modifications?.rules?.length || 0),
-                  0
-                )
-              }
               return {
                 config,
                 selectedProfileIndex,
                 selectedRuleIndex: null,
                 error: null,
-                isDirty: false,
-                importExportHistory: [newHistory, ...state.importExportHistory].slice(0, 20)
+                isDirty: false
               }
             }
             return {
@@ -330,28 +303,13 @@ export const useKarabinerStore = create<KarabinerState>()(
             }
           }),
 
-        addHistoryEntry: entry =>
-          set(state => ({
-            importExportHistory: [
-              {
-                ...entry,
-                id: crypto.randomUUID(),
-                timestamp: Date.now()
-              },
-              ...state.importExportHistory
-            ].slice(0, 20) // Keep only last 20 entries
-          })),
-
-        clearHistory: () => set({ importExportHistory: [] }),
-
         reset: () => set(initialState)
       }),
       {
         name: 'karabiner-storage',
         partialize: state => ({
           config: state.config,
-          selectedProfileIndex: state.selectedProfileIndex,
-          importExportHistory: state.importExportHistory
+          selectedProfileIndex: state.selectedProfileIndex
         })
       }
     )
