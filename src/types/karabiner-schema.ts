@@ -189,6 +189,7 @@ const ManipulatorParametersSchema = z.object({
 
 const ManipulatorSchema = z.object({
   type: z.enum(['basic', 'mouse_motion_to_scroll']),
+  description: z.string().optional(),
   from: FromEventSchema,
   to: z.array(ToEventSchema).optional(),
   to_if_alone: z.array(ToEventSchema).optional(),
