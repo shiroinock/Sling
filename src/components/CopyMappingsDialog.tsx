@@ -72,7 +72,7 @@ export function CopyMappingsDialog({
     if (selectedSource === 'profile') {
       mappingsToCopy = currentProfileMappings
     } else {
-      const deviceIndex = parseInt(selectedSource.replace('device-', ''))
+      const deviceIndex = parseInt(selectedSource.replace('device-', ''), 10)
       if (devices[deviceIndex]) {
         mappingsToCopy = devices[deviceIndex].simple_modifications || []
       }
@@ -141,7 +141,7 @@ export function CopyMappingsDialog({
             <RadioGroup value={selectedSource} onValueChange={setSelectedSource}>
               {sourcesWithMappings.map(source => {
                 const isProfile = source.id === 'profile'
-                const deviceIndex = isProfile ? -1 : parseInt(source.id.replace('device-', ''))
+                const deviceIndex = isProfile ? -1 : parseInt(source.id.replace('device-', ''), 10)
                 const device = isProfile ? null : devices[deviceIndex]
 
                 return (

@@ -31,11 +31,11 @@
     "url": "https://github.com/shiroinock/Sling/issues"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4",
+    "@biomejs/biome": "^2.3.1",
     "@radix-ui/react-slot": "^1.2.3",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^24.2.1",
-    "@types/react": "^19.1.9",
+    "@types/react": "^19.2.0",
     "@types/react-dom": "^19.1.7",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^5.0.0",
@@ -47,10 +47,10 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.9.2",
-    "vite": "^7.1.1"
+    "vite": "^7.1.12"
   },
   "dependencies": {
-    "@playwright/test": "^1.54.2",
+    "@playwright/test": "^1.56.1",
     "@radix-ui/react-collapsible": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
@@ -59,9 +59,9 @@
     "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-tabs": "^1.1.12",
-    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/postcss": "^4.1.16",
     "file-saver": "^2.0.5",
-    "react": "^19.1.1",
+    "react": "^19.2.0",
     "react-dom": "^19.1.1",
     "react-dropzone": "^14.3.8",
     "uuid": "^11.1.0",
