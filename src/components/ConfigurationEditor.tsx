@@ -148,7 +148,7 @@ export function ConfigurationEditor() {
                           setIsDeviceMode(false)
                           setSelectedDeviceIndex(null)
                         } else {
-                          const deviceIndex = parseInt(value.replace('device-', ''))
+                          const deviceIndex = parseInt(value.replace('device-', ''), 10)
                           setIsDeviceMode(true)
                           setSelectedDeviceIndex(deviceIndex)
                         }
