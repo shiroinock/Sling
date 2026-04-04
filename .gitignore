@@ -59,3 +59,4 @@ coverage/
 node_modules/
 
 .serena
+.playwright-mcp/
