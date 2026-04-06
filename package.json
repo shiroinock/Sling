@@ -46,7 +46,7 @@
     "lucide-react": "0.539.0",
     "postcss": "8.5.8",
     "tailwind-merge": "3.5.0",
-    "tailwindcss": "4.1.11",
+    "tailwindcss": "4.2.2",
     "typescript": "5.9.3",
     "vite": "7.3.1"
   },
