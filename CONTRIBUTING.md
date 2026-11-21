@@ -18,8 +18,8 @@ Thank you for your interest in contributing to Sling! We welcome contributions f
 3. Make your changes
 4. Run tests and ensure code quality:
    ```bash
-   npm run check
-   npm run build
+   pnpm run check
+   pnpm run build
    ```
 5. Commit your changes with a clear message
 6. Push to your fork and submit a pull request
@@ -27,20 +27,20 @@ Thank you for your interest in contributing to Sling! We welcome contributions f
 ### Code Style
 
 - We use Biome for linting and formatting
-- Run `npm run check:fix` before committing
+- Run `pnpm run check:fix` before committing
 - Follow the existing code patterns
 
 ### Development Setup
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm run dev
 
 # Run checks
-npm run check
+pnpm run check
 ```
 
 ## License

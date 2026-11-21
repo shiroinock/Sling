@@ -69,11 +69,11 @@ SlingはKarabiner-Elements用のキーマッピングWeb GUIです。VIA/Remap�
 ## 開発
 ```bash
 # 依存関係のインストール
-npm install
+pnpm install
 
 # 開発サーバーの起動
-npm run dev
+pnpm run dev
 
 # ビルド
-npm run build
+pnpm run build
 ```

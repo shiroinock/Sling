@@ -23,34 +23,34 @@ SlingはKarabiner-Elements用のキーマッピングWeb GUIです。VIA/Remap�
 ### 開発コマンド
 ```bash
 # 依存関係のインストール
-npm install
+pnpm install
 
 # 開発サーバーの起動
-npm run dev
+pnpm run dev
 
 # プロダクションビルド
-npm run build
+pnpm run build
 
 # ビルド結果のプレビュー
-npm run preview
+pnpm run preview
 
 # コードリント（チェックのみ）
-npm run lint
+pnpm run lint
 
 # コードリント（自動修正付き）
-npm run lint:fix
+pnpm run lint:fix
 
 # コードフォーマット
-npm run format
+pnpm run format
 
 # 総合チェック（リント＋フォーマット）
-npm run check
+pnpm run check
 
 # 総合チェック（自動修正付き）
-npm run check:fix
+pnpm run check:fix
 
 # TypeScriptの型チェック
-npx tsc --noEmit
+pnpm exec tsc --noEmit
 ```
 
 ### Karabiner-Elements統合
@@ -74,7 +74,7 @@ npx tsc --noEmit
 
 ### ビルドコマンド（プロジェクト設定後に更新）
 ```bash
-npm run build  # または yarn build, pnpm build
+pnpm run build
 ```
 
 ### ビルド出力ディレクトリ
