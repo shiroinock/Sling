@@ -48,8 +48,8 @@ importers:
         specifier: 14.4.1
         version: 14.4.1(react@19.2.4)
       uuid:
-        specifier: 11.1.0
-        version: 11.1.0
+        specifier: 11.1.1
+        version: 11.1.1
       zod:
         specifier: 4.3.6
         version: 4.3.6
@@ -1495,8 +1495,8 @@ packages:
       '@types/react':
         optional: true
 
-  uuid@11.1.0:
-    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
   vite@7.3.7:
@@ -2739,7 +2739,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.0
 
-  uuid@11.1.0: {}
+  uuid@11.1.1: {}
 
   vite@7.3.7(@types/node@24.12.2)(jiti@2.6.1)(lightningcss@1.30.2):
     dependencies:
