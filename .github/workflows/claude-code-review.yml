@@ -1,0 +1,25 @@
+# Claude Code reviews every ready PR, and labels it マージ予約 when nothing needs fixing.
+# The jobs live in shiroinock/workflows; change them there, not here.
+name: Claude のレビュー
+
+on:
+  # pull_request (not pull_request_target): a fork's PR gets no secrets, and is skipped too.
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions: {}
+
+jobs:
+  review:
+    uses: shiroinock/workflows/.github/workflows/claude-review.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: read
+      actions: write
+      id-token: write
+    # with:
+    #   review_focus: |
+    #     - このリポジトリで特に見てほしい観点
+    secrets:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

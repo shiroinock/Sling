@@ -1,0 +1,27 @@
+# Turns on auto-merge for PRs labelled マージ予約 once they point at the default branch.
+# The job lives in shiroinock/workflows; change it there, not here.
+name: マージ予約
+
+on:
+  # pull_request_target: forks get a token that can merge too. No code from the PR is checked out
+  # or run; the script comes from shiroinock/workflows.
+  pull_request_target:
+    types: [labeled, edited, ready_for_review, reopened, closed]
+  # What GITHUB_TOKEN merged sends no events, so the PR stacked on it is picked up by this.
+  # In a private repository every run costs Actions minutes; leave the schedule out there.
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  reserve:
+    uses: shiroinock/workflows/.github/workflows/merge-reservation.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    # with:
+    #   ci_workflow: ci.yml # must accept workflow_dispatch
+    #   workflows_ref: <SHA> # when the uses: line above is pinned to a SHA, pass the same SHA
