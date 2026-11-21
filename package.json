@@ -44,7 +44,7 @@
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "lucide-react": "0.539.0",
-    "postcss": "8.5.8",
+    "postcss": "8.5.23",
     "tailwind-merge": "3.5.0",
     "tailwindcss": "4.1.11",
     "typescript": "5.9.3",
