@@ -15,7 +15,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      issues: read
+      issues: write # the nits job collects minor findings in an issue
       actions: write
       id-token: write
     # with:
