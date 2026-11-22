@@ -1,3 +1,11 @@
+# pnpm reads its own settings here; pnpm 11 reads only auth and registry settings from .npmrc.
+
+# Do not run lifecycle scripts of dependencies or of this package on install.
+ignoreScripts: true
+
+# Save exact versions (no ^ or ~).
+saveExact: true
+
 # Supply chain: install only versions published at least 3 days ago (in minutes).
 # Renovate waits 7 days for ordinary updates and 3 for security fixes.
 minimumReleaseAge: 4320
