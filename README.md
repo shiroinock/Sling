@@ -2,6 +2,7 @@
 
 [![Deploy to GitHub Pages](https://github.com/shiroinock/Sling/actions/workflows/deploy.yml/badge.svg)](https://github.com/shiroinock/Sling/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![dept](https://raw.githubusercontent.com/shiroinock/Sling/dept-badge/dept.svg)](https://github.com/shiroinock/Sling/blob/dept-badge/dept.md)
 
 Visual key mapping GUI for Karabiner-Elements - Easily customize your keyboard with a VIA/Remap-style interface.
 

@@ -1,0 +1,25 @@
+# Scores how far the dependencies lag behind their latest releases and keeps the README badge
+# and its report up to date (public repositories only). In the README, link the badge to the report:
+#   [![dept](https://raw.githubusercontent.com/<owner>/<repo>/dept-badge/dept.svg)](https://github.com/<owner>/<repo>/blob/dept-badge/dept.md)
+# The job lives in shiroinock/workflows; change it there, not here.
+name: dept
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 1" # every Monday; new releases raise the score without a push
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  dept:
+    uses: shiroinock/workflows/.github/workflows/dept.yml@main
+    permissions:
+      contents: write # push the badge branch
+    # with:
+    #   path: .                # the lockfile, or a directory that has one
+    #   args: --prod           # extra arguments for dept
+    #   allow_errors: false    # put the badge even when some dependencies could not be checked
+    #   branch: dept-badge     # where dept.svg, dept.md and dept.json go; empty to not push
