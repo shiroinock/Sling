@@ -22,6 +22,8 @@ jobs:
       contents: write
       pull-requests: write
       actions: write
-    # with:
-    #   ci_workflow: ci.yml # must accept workflow_dispatch
+    with:
+      # No CI here, so the deploy is what runs on main after a GITHUB_TOKEN merge (which sends no
+      # push event). It accepts workflow_dispatch; a person's merge still deploys by push.
+      ci_workflow: deploy.yml
     #   workflows_ref: <SHA> # when the uses: line above is pinned to a SHA, pass the same SHA
