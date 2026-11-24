@@ -11,7 +11,7 @@ permissions: {}
 
 jobs:
   pinact:
-    uses: shiroinock/workflows/.github/workflows/pinact.yml@main
+    uses: shiroinock/workflows/.github/workflows/pinact.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
     permissions:
       contents: read
     # with:

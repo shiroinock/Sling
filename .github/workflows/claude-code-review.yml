@@ -11,7 +11,7 @@ permissions: {}
 
 jobs:
   review:
-    uses: shiroinock/workflows/.github/workflows/claude-review.yml@main
+    uses: shiroinock/workflows/.github/workflows/claude-review.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
     permissions:
       contents: write
       pull-requests: write

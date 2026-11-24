@@ -15,7 +15,7 @@ permissions: {}
 
 jobs:
   dept:
-    uses: shiroinock/workflows/.github/workflows/dept.yml@main
+    uses: shiroinock/workflows/.github/workflows/dept.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
     permissions:
       contents: write # push the badge branch
     # with:
