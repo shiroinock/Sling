@@ -1,0 +1,34 @@
+# When a dependency-update PR (Renovate's) is held by Claude's review findings or a failed CI,
+# Claude Code fixes the branch without running anything from it (source, config, versions and the
+# lockfile, rewritten without running package code) and pushes. When the update needs the
+# owner's decision, or it cannot fix it, it mentions the owner on the PR and labels it 人の手が要る.
+# The job lives in shiroinock/workflows; change it there, not here.
+name: Claude で依存の更新を直す
+
+on:
+  # Runs from the default branch's copy of this file, with secrets; the job itself only takes
+  # this repository's PR branches opened by the dependency bots, and runs no package code.
+  # Every workflow: the job waits for the last check of the PR's commit, whatever the CI is named.
+  workflow_run: # zizmor: ignore[dangerous-triggers] the job takes only this repository's PR branches and runs no package code from them
+    workflows: ["**"]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  fix:
+    uses: shiroinock/workflows/.github/workflows/claude-fix-deps.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      actions: read
+      checks: read
+      statuses: read
+      id-token: write
+    # with:
+    #   bots: renovate
+    #   branch_prefix: renovate/
+    #   max_attempts: 2
+    secrets:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

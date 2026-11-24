@@ -1,0 +1,18 @@
+# Fails a PR when code matches the shared ast-grep rules, made from Claude's review findings that a
+# static check catches cheaper. Fix it with `nix run github:shiroinock/workflows#rules -- --fix`.
+# The job lives in shiroinock/workflows; change it there, not here.
+name: 共通の静的ルール
+
+on:
+  # Every PR: a required check has to report on all of them.
+  pull_request:
+
+permissions: {}
+
+jobs:
+  rules:
+    uses: shiroinock/workflows/.github/workflows/static-rules.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
+    permissions:
+      contents: read
+    # with:
+    #   workflows_ref: <SHA> # when the uses: line above is pinned to a SHA, pass the same SHA

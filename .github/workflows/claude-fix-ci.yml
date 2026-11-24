@@ -1,0 +1,30 @@
+# When the CI of a PR fails, Claude Code tries to fix the branch and push. When it cannot, it
+# mentions the owner on the PR and labels it 人の手が要る.
+# The job lives in shiroinock/workflows; change it there, not here.
+name: Claude で CI を直す
+
+on:
+  # Runs from the default branch's copy of this file, with secrets; the job itself only takes
+  # branches of this repository whose PR a person opened.
+  # Every workflow: the job takes only the failed runs a PR started, whatever the CI is named,
+  # and skips the shared ones it does not fix (see skip_workflows below).
+  workflow_run: # zizmor: ignore[dangerous-triggers] the job takes only this repository's PR branches
+    workflows: ["**"]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  fix:
+    uses: shiroinock/workflows/.github/workflows/claude-fix-ci.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      actions: read
+      id-token: write
+    # with:
+    #   max_attempts: 2
+    #   skip_workflows: e2e.yml # workflows not to fix, by file name
+    secrets:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

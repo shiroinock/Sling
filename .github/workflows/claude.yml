@@ -3,7 +3,7 @@
 name: Claude
 
 on:
-  issue_comment:
+  issue_comment: # zizmor: ignore[dangerous-triggers] the job runs only for the owner's @claude
     types: [created]
   pull_request_review_comment:
     types: [created]
@@ -16,7 +16,7 @@ permissions: {}
 
 jobs:
   claude:
-    uses: shiroinock/workflows/.github/workflows/claude.yml@main
+    uses: shiroinock/workflows/.github/workflows/claude.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
     permissions:
       contents: read
       pull-requests: read
